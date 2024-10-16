@@ -2,13 +2,26 @@ package src;
 import java.util.*;
 
 public class Player {
-    private String name;
-    private List<Character> myLetters;
+    private final String name;
+    private List<Character> hand;
     private int myScore;
+    private static Bag bag;
 
-
-    public Player(String name) {
+    public Player(String name, Bag bag) {
         this.name = name;
+        this.bag = bag;
 
+    }
+
+    private void makeHand() {
+
+    }
+
+    private void refillHand() {
+        int value = 7 - hand.size();
+        while (value > 0 || bag.getTileCount > 0) {
+            hand.add(bag.getTile());
+            value--;
+        }
     }
 }

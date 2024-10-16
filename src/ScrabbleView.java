@@ -1,4 +1,4 @@
-package SRC;
+package src;
 
 public class ScrabbleView {
 

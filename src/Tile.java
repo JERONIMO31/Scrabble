@@ -7,10 +7,6 @@ public class Tile {
         this.tileChar = Character.toUpperCase(tile);
     }
 
-    public Tile() {
-        this.tileChar = 0;
-    }
-
     public int getTileScore(char tile) {
         if (tile == 'A'||tile == 'E'||tile == 'I'||tile == 'O'||tile == 'U'||tile == 'L'||tile == 'N'||tile == 'S'||tile == 'T'||tile == 'R') {
             return 1;
@@ -40,10 +36,6 @@ public class Tile {
 
     public char getTileChar() {
         return tileChar;
-    }
-
-    public boolean isEmpty() {
-        return tileChar == 0;
     }
 
     public boolean equals(Tile tile) {

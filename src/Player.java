@@ -3,7 +3,7 @@ import java.util.*;
 
 public class Player {
     private final String name;
-    private List<Character> hand;
+    private List<Tile> hand;
     private int myScore;
     private static Bag bag;
 
@@ -19,8 +19,8 @@ public class Player {
 
     private void refillHand() {
         int value = 7 - hand.size();
-        while (value > 0 || bag.getTileCount > 0) {
-            hand.add(bag.getTile());
+        while (value > 0 || bag.getTileCount() > 0) {
+            hand.add(bag.drawTile());
             value--;
         }
     }

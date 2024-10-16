@@ -22,7 +22,7 @@ public class Tile {
             return 3;
         }
         else if (tile == 'F'||tile == 'H'||tile == 'V'||tile == 'W'||tile == 'Y') {
-            return 2;
+            return 4;
         }
         else if (tile == 'K') {
             return 5;

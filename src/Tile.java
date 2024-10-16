@@ -4,7 +4,7 @@ public class Tile {
     private final char tileChar;
 
     public Tile(char tile) {
-        this.tileChar = tile;
+        this.tileChar = Character.toUpperCase(tile);
     }
 
     public Tile() {
@@ -22,7 +22,7 @@ public class Tile {
             return 3;
         }
         else if (tile == 'F'||tile == 'H'||tile == 'V'||tile == 'W'||tile == 'Y') {
-            return 2;
+            return 4;
         }
         else if (tile == 'K') {
             return 5;
@@ -47,6 +47,6 @@ public class Tile {
     }
 
     public boolean equals(Tile tile) {
-        return tile.getTileChar() == tileChar;
+        return Character.toUpperCase(tile.getTileChar()) == Character.toUpperCase(this.tileChar);
     }
 }

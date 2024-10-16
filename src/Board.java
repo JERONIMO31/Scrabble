@@ -24,7 +24,7 @@ public class Board {
         return board[x][y];
     }
 
-    public boolean isEmtpy(int x, int y){
+    public boolean isEmpty(int x, int y){
         return board[x][y] == null;
     }
 

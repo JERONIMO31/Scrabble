@@ -11,6 +11,7 @@ public class Player {
         this.name = name;
         this.bag = bag;
         this.hand = new ArrayList<>();
+        myScore = 0;
         makeHand();
     }
 
@@ -28,6 +29,25 @@ public class Player {
         }
     }
 
+    public int numInHand(char c){
+        int num = 0;
+        for (Tile tile : hand){
+            if (tile.equals(c)){
+                num++;
+            }
+        }
+        return num;
+    }
+
+    public Tile popTile (char c) {
+        for (int i = 0; i < hand.size(); i++) {
+            if (hand.get(i).getTileChar() == c) {
+                return hand.remove(i);
+            }
+        }
+        return null;
+    }
+
     public void addToScore(int score) {
         this.myScore += score;
     }
@@ -42,9 +62,5 @@ public class Player {
 
     public String getName() {
         return this.name;
-    }
-
-    pubic void placeTile() {
-
     }
 }

@@ -39,13 +39,4 @@ public class Board {
         }
         return view.toString();
     }
-
-    public static void main(String[] args){
-        Board board = new Board();
-        board.addLetter(8,8, new Tile('W'));
-        board.addLetter(9,8, new Tile('I'));
-        board.addLetter(10,8, new Tile('Q'));
-        board.addLetter(11,8, new Tile('M'));
-        System.out.print(board.getBoardView());
-    }
 }

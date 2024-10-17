@@ -41,4 +41,9 @@ public class Tile {
     public boolean equals(Tile tile) {
         return Character.toUpperCase(tile.getTileChar()) == Character.toUpperCase(this.tileChar);
     }
+
+    public boolean equals(char letter) {
+        return Character.toUpperCase(letter) == Character.toUpperCase(this.tileChar);
+    }
+
 }

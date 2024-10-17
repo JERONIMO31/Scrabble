@@ -22,12 +22,15 @@ public class ScrabbleController {
         boolean success = false;
         while (!success) {
             String inputLine;
-            String word1 = null;
-            String word2 = null;
-            String word3 = null;
-            String word4 = null;
+            String word1;
+            String word2;
+            String word3;
+            String word4;
+            int x;
+            int y;
+            char ch3;
 
-            System.out.print("Enter where to move, the x and y coordinates, the direction the word will go, and the word 'x y D/R <word>' > ");
+            System.out.print(" > ");
 
             inputLine = reader.nextLine();
 
@@ -42,42 +45,61 @@ public class ScrabbleController {
                     return;
                 } else if (word1.equals("reset")) {
                     model.resetGame();
+                    return;
                 } else if (word1.equals("help")) {
                     view.showHelp();
                     getCommand();
                     return;
-                }
-
-                if (tokenizer.hasNext()) {
-                    word2 = tokenizer.next();      // get second word
-                    if (tokenizer.hasNext()) {
-                        word3 = tokenizer.next();      // get third word
-                        if (!word3.equals("D") && !word3.equals("R")) {
-                            System.out.print("The direction of the word must be D (down) or R (right)");
-                            System.out.print("Enter the direction the word will go 'D/R' > ");
-                            inputLine = reader.nextLine();
-                            if (tokenizer.hasNext()) {
-                                word3 = tokenizer.next();
-                            }
-                        }
-                        if (tokenizer.hasNext()) {
-                            word4 = tokenizer.next();      // get fourth word
-
-                            word3 = word3.toUpperCase();
-                            char ch3 = word3.charAt(0);
-                            int x = Integer.parseInt(word1);
-                            int y = Integer.parseInt(word2);
-
-                            success = model.makeMove(x, y, ch3, word4);
-                        }
+                } else {
+                    try {
+                        x = Integer.parseInt(word1);
+                    } catch (Exception _){
+                        System.out.println("Invalid command!");
+                        getCommand();
+                        return;
                     }
                 }
+
+                try {
+                    word2 = tokenizer.next();      // get second word
+                    y = Integer.parseInt(word2);
+                } catch (Exception _){
+                    System.out.println("Invalid command!");
+                    getCommand();
+                    return;
+                }
+
+                try {
+                    word3 = tokenizer.next().toUpperCase();      // get third word
+                    ch3 = word3.charAt(0);
+                } catch (Exception _){
+                    System.out.println("Invalid command!");
+                    getCommand();
+                    return;
+                }
+                if (!word3.equals("D") && !word3.equals("R")) {
+                    System.out.println("Invalid command!");
+                    getCommand();
+                    return;
+                }
+
+                try {
+                    word4 = tokenizer.next();      // get fourth word
+                } catch (Exception _){
+                    System.out.println("Invalid command!");
+                    getCommand();
+                    return;
+                }
+
+                success = model.makeMove(x, y, ch3, word4);
+
+                if (!success){System.out.println("Invalid move!");}
             }
         }
     }
 
     public void startGame() {
-        System.out.println("How many players? > ");
+        System.out.print("How many players? > ");
         int numberOfPlayers = reader.nextInt();
 
         reader.nextLine();
@@ -94,7 +116,5 @@ public class ScrabbleController {
 
         model.play();
     }
-
-
 
 }

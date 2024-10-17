@@ -2,13 +2,13 @@ package src;
 import java.util.*;
 
 public class ScrabbleModel {
-    private List<Player> players;
-    private Board board;
-    private Bag bag;
+    private static List<Player> players;
+    private static Board board;
+    private static Bag bag;
     private ScrabbleView view;
     private ScrabbleController controller;
-    private int currentPlayerIndex;
-    private boolean finished;
+    private static int currentPlayerIndex;
+    private static boolean finished;
 
     public ScrabbleModel(){
         board = new Board();
@@ -85,7 +85,7 @@ public class ScrabbleModel {
     }
 
     public void play(){
-        boolean finished = false;
+        finished = false;
         currentPlayerIndex = 0;
         while (!finished){
             view.showBoard(board, players.get(currentPlayerIndex), bag, players);

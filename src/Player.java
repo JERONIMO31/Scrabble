@@ -41,7 +41,7 @@ public class Player {
 
     public Tile popTile (char c) {
         for (int i = 0; i < hand.size(); i++) {
-            if (hand.get(i).getTileChar() == c) {
+            if (hand.get(i).equals(c)) {
                 return hand.remove(i);
             }
         }

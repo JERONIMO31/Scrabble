@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class Bag {
-    private final List<Tile> tiles;
+    private static List<Tile> tiles;
 
     public Bag() {
         tiles = new ArrayList<>();

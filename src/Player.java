@@ -43,4 +43,8 @@ public class Player {
     public String getName() {
         return this.name;
     }
+
+    pubic void placeTile() {
+
+    }
 }

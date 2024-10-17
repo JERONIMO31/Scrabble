@@ -21,7 +21,7 @@ public class Player {
         }
     }
 
-    private void refillHand() {
+    public void refillHand() {
         int value = 7 - hand.size();
         while (value > 0 || bag.getTileCount() > 0) {
             hand.add(bag.drawTile());

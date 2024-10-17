@@ -62,6 +62,7 @@ public class ScrabbleModel {
             }
             if (board.isEmpty(xIndex, yIndex)) {
                 board.addLetter(xIndex, yIndex, players.get(currentPlayerIndex).popTile(c));
+                players.get(currentPlayerIndex).refillHand();
             }
         }
         return true;

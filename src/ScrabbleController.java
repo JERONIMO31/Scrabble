@@ -105,7 +105,7 @@ public class ScrabbleController {
     }
 
     public void startGame() {
-        System.out.print("How many players? > ");
+        System.out.println("How many players? > ");
         int numberOfPlayers = reader.nextInt();
         if (numberOfPlayers <= 0 || numberOfPlayers > 4) {
             throw new IllegalArgumentException("Number of players must be greater than 0 but less then 4");

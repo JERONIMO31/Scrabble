@@ -1,7 +1,7 @@
 package src;
 
 public class Board {
-    private Tile[][] board;
+    private static Tile[][] board;
 
     public Board(){
         board = new Tile[15][15];
@@ -21,11 +21,11 @@ public class Board {
     }
 
     public Tile getTile(int x, int y){
-        return board[x][y];
+        return board[x-1][y-1];
     }
 
     public boolean isEmpty(int x, int y){
-        return board[x][y] == null;
+        return board[x-1][y-1] == null;
     }
 
     public String getBoardView(){

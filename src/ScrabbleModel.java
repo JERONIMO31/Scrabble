@@ -2,13 +2,13 @@ package src;
 import java.util.*;
 
 public class ScrabbleModel {
-    private List<Player> players;
-    private Board board;
-    private Bag bag;
+    private static List<Player> players;
+    private static Board board;
+    private static Bag bag;
     private ScrabbleView view;
     private ScrabbleController controller;
-    private int currentPlayerIndex;
-    private boolean finished;
+    private static int currentPlayerIndex;
+    private static boolean finished;
 
     public ScrabbleModel(){
         board = new Board();
@@ -26,6 +26,8 @@ public class ScrabbleModel {
         HashMap<Character, Integer> charMap = new HashMap<>();
         int xIndex;
         int yIndex;
+
+        System.out.println("Make move called");
 
         for (int i = 0; i < word.length(); i++) {
             char c = word.charAt(i);
@@ -62,6 +64,7 @@ public class ScrabbleModel {
             }
             if (board.isEmpty(xIndex, yIndex)) {
                 board.addLetter(xIndex, yIndex, players.get(currentPlayerIndex).popTile(c));
+                System.out.println("Char:" + c);
             }
         }
         return true;
@@ -85,7 +88,7 @@ public class ScrabbleModel {
     }
 
     public void play(){
-        boolean finished = false;
+        finished = false;
         currentPlayerIndex = 0;
         while (!finished){
             view.showBoard(board, players.get(currentPlayerIndex), bag, players);

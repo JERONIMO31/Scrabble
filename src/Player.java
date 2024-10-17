@@ -60,7 +60,7 @@ public class Player {
         return this.name;
     }
 
-    public String getHand() {
+    public String getHandView() {
         String handStr = "";
         for (Tile tile : hand) {
             handStr += "[" + tile.getTileChar() + "]";

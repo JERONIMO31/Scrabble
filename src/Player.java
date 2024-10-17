@@ -56,11 +56,15 @@ public class Player {
         return this.myScore;
     }
 
-    public List<Tile> getHand() {
-        return this.hand;
-    }
-
     public String getName() {
         return this.name;
+    }
+
+    public String getHand() {
+        String handStr = "";
+        for (Tile tile : hand) {
+            handStr += "[" + tile.getTileChar() + "]";
+        }
+        return handStr;
     }
 }

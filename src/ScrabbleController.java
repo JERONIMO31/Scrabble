@@ -65,12 +65,16 @@ public class ScrabbleController {
             word1 = tokenizer.next();      // get first word
             if(word1.equals("quit")) {
                 model.quit();
+                return;
             }
             else if(word1.equals("skip")) {
-                model.skip();
+                return;
             }
             else if(word1.equals("reset")) {
                 model.resetGame();
+            }
+            else if(word1.equals("help")) {
+                view.showHelp();
             }
 
             if(tokenizer.hasNext()) {
@@ -89,10 +93,11 @@ public class ScrabbleController {
                         word4 = tokenizer.next();      // get fourth word
 
                         word3 = word3.toUpperCase();
+                        char ch3 = word3.charAt(0);
                         int x = Integer.parseInt(word1);
                         int y = Integer.parseInt(word2);
 
-                        boolean success = model.makeMove(x, y, word3, word4);
+                        boolean success = model.makeMove(x, y, ch3, word4);
                     }
                 }
             }

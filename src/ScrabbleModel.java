@@ -27,8 +27,6 @@ public class ScrabbleModel {
         int xIndex;
         int yIndex;
 
-        System.out.println("Make move called");
-
         for (int i = 0; i < word.length(); i++) {
             char c = word.charAt(i);
             if (direction == 'D'){
@@ -64,7 +62,6 @@ public class ScrabbleModel {
             }
             if (board.isEmpty(xIndex, yIndex)) {
                 board.addLetter(xIndex, yIndex, players.get(currentPlayerIndex).popTile(c));
-                System.out.println("Char:" + c);
             }
         }
         return true;

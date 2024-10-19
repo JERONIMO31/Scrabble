@@ -1,12 +1,30 @@
 package src;
 
+/**
+ * The Tile class represents a single Scrabble tile with a specific character.
+ */
 public class Tile {
     private final char tileChar;
 
+    /**
+     * Constructs a Tile with the specified character. The character is automatically
+     * converted to uppercase.
+     *
+     * @param tile The character to be represented by this tile.
+     */
     public Tile(char tile) {
         this.tileChar = Character.toUpperCase(tile);
     }
 
+    /**
+     * Returns the score associated with a given Scrabble tile character based on
+     * Scrabble scoring rules.
+     *
+     * @param tile The character of the tile to get the score for.
+     * @return The score of the tile. Returns 1 for common letters (e.g., A, E, I),
+     *         2 for D, G, 3 for B, C, M, P, etc., up to 10 for Q and Z.
+     * @throws IllegalArgumentException If the tile character is not a valid Scrabble tile.
+     */
     public int getTileScore(char tile) {
         if (tile == 'A'||tile == 'E'||tile == 'I'||tile == 'O'||tile == 'U'||tile == 'L'||tile == 'N'||tile == 'S'||tile == 'T'||tile == 'R') {
             return 1;
@@ -34,14 +52,21 @@ public class Tile {
         }
     }
 
+    /**
+     * Returns the character represented by this tile.
+     *
+     * @return The character of this tile.
+     */
     public char getTileChar() {
         return tileChar;
     }
 
-    public boolean equals(Tile tile) {
-        return Character.toUpperCase(tile.getTileChar()) == Character.toUpperCase(this.tileChar);
-    }
-
+    /**
+     * Compares this tile with a character for equality.
+     *
+     * @param letter The character to compare to.
+     * @return true if the tile's character matches the given character, false otherwise.
+     */
     public boolean equals(char letter) {
         return Character.toUpperCase(letter) == Character.toUpperCase(this.tileChar);
     }

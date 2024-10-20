@@ -1,4 +1,5 @@
 package src;
+import javax.lang.model.type.ArrayType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -60,4 +61,15 @@ public class Bag {
     public int getTileCount() {
         return tiles.size();
     }
+
+    public boolean ItContains(String word ){
+        for (int i = 0 ; i < word.length() ; i ++) {
+            if (tiles.contains(word.charAt(i)) == false) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 }
+

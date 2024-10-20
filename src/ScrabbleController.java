@@ -29,7 +29,6 @@ public class ScrabbleController {
             int x;
             int y;
             char ch3;
-
             System.out.print(" > ");
 
             inputLine = reader.nextLine();
@@ -92,7 +91,6 @@ public class ScrabbleController {
                 }
 
                 success = model.makeMove(x, y, ch3, word4);
-
                 if (!success){System.out.println("Invalid move!");}
             }
         }

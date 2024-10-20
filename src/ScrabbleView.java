@@ -9,7 +9,10 @@ public class ScrabbleView {
         for (Player p : players){
             System.out.println(p.getName() + ": " + p.getScore());
         }
+        System.out.println("                              1  1  1  1  1  1 ");
+        System.out.println("   1  2  3  4  5  6  7  8  9  0  1  2  3  4  5 ");
         System.out.println(board.getBoardView());
+        System.out.println(player.getName()+"'s score is "+player.getScore()+ "!");
         System.out.println(player.getName() + "'s turn!\n");
         System.out.println(player.getHandView());
     }

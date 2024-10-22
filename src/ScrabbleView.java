@@ -61,6 +61,7 @@ public class ScrabbleView {
         System.out.println("To move input: x y direction word");
         System.out.println("x y = x y coordinates of word start tile, direction = R or D (right or down), \n" +
                 " word = word you want to play");
+        System.out.println("For the first move it must begin on the coordinates 8 8");
         System.out.println("Other commands: quit, reset, pass");
     }
 

@@ -14,6 +14,9 @@ public class ScrabbleView extends JFrame {
     private final JLabel scoreLabel;
     private final JPanel controlPanel;
     private final JButton playWordButton;
+    private final JMenuItem resetGameItem, resetGameSPItem;
+
+
 
 
     public ScrabbleView(ScrabbleModel model) {
@@ -58,6 +61,12 @@ public class ScrabbleView extends JFrame {
         playWordButton = new JButton("Play Word");
         controlPanel.add(playWordButton);
 
+        // Add gameMenu and items
+        JMenu gameMenu = new JMenu("Game");
+        resetGameSPItem = new JMenuItem("Restart game (with same players)");
+        resetGameItem = new JMenuItem("New game (with new players)");
+        gameMenu.add(resetGameItem);
+        gameMenu.add(resetGameSPItem);
 
         // Add panels to the frame
         add(boardPanel, BorderLayout.CENTER);

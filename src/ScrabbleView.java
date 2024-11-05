@@ -142,6 +142,14 @@ public class ScrabbleView extends JFrame {
         return scoreLabel;
     }
 
+    public JMenuItem getResetGameItem() {
+        return resetGameItem;
+    }
+
+    public JMenuItem getResetGameSPItem() {
+        return resetGameSPItem;
+    }
+
     public void highlightHandTile(int tileIndex) {
         for (JButton tile : handTiles) {
             tile.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));

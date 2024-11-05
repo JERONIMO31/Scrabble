@@ -1,7 +1,5 @@
 import javax.swing.*;
 import java.io.FileNotFoundException;
-import java.io.PrintStream;
-import java.util.Iterator;
 import java.util.List;
 import java.awt.*;
 
@@ -11,6 +9,7 @@ public class ScrabbleView extends JFrame {
     private final JButton[][] boardCells;
     private final JPanel playerHandPanel;
     private final JButton[] handTiles;
+    private final JTextField playerName;
     private final JPanel scorePanel;
     private final JLabel scoreLabel;
     private final JPanel controlPanel;
@@ -48,7 +47,8 @@ public class ScrabbleView extends JFrame {
         // Initialize playerHandPanel
         playerHandPanel = new JPanel(new FlowLayout());
         handTiles = new JButton[7];
-        playerHandPanel.add(new JTextField(model.getCurrentPlayer().getName() + "'s turn:"));
+        playerName = new JTextField(model.getCurrentPlayer().getName() + "'s turn:");
+        playerHandPanel.add(playerName);
         for (int i = 0; i < 7; i++) {
             handTiles[i] = new JButton(" ");
             handTiles[i].setPreferredSize(new Dimension(40, 40));
@@ -59,7 +59,7 @@ public class ScrabbleView extends JFrame {
 
         // Initialize scorePanel
         scorePanel = new JPanel();
-        String scoreStr = getScoreString();
+        scoreStr = getScoreString();
         scoreLabel = new JLabel(scoreStr);
         scorePanel.add(scoreLabel);
 
@@ -107,52 +107,57 @@ public class ScrabbleView extends JFrame {
         return scoreStr;
     }
 
-    public void updateBoard() {
+    public void updateView() {
+        Board board = this.model.getBoard();
 
-
-
-
-
-        Iterator var5 = players.iterator();
-
-        PrintStream var10000;
-        String var10001;
-        while(var5.hasNext()) {
-            Player p = (Player)var5.next();
-            var10000 = System.out;
-            var10001 = p.getName();
-            var10000.println(var10001 + ": " + p.getScore());
+        // Restore the board
+        for (int i = 0; i < 15; i++) {
+            for (int j = 0; j < 15; j++) {
+                if (board.isEmpty(i, j)) {
+                    boardCells[i][j].setText(" ");
+                    boardCells[i][j].setEnabled(true);
+                }
+                else {
+                    boardCells[i][j].setText(String.valueOf(board.getTile(i, j).getTileChar()));
+                    boardCells[i][j].setEnabled(false);
+                }
+            }
         }
 
-        System.out.println("                              1  1  1  1  1  1 ");
-        System.out.println("   1  2  3  4  5  6  7  8  9  0  1  2  3  4  5 ");
-        System.out.println(board.getBoardView());
-        var10000 = System.out;
-        var10001 = player.getName();
-        var10000.println(var10001 + "'s score is " + player.getScore() + "!");
-        System.out.println(player.getName() + "'s turn!\n");
-        System.out.println(player.getHandView());
+        // Restore the current players hand
+        for (int i = 0; i < model.getCurrentPlayer().getHand().size(); i++) {
+            handTiles[i].setText(String.valueOf(model.getCurrentPlayer().getHand().get(i).getTileChar()));
+            handTiles[i].setEnabled(true);
+        }
+
+        // Update the players current scores
+        scoreStr = getScoreString();
+
+        // Update the current player
+        playerName.setText(model.getCurrentPlayer().getName());
     }
 
     public void showEnd(Board board, List<Player> players) {
         Player winner = players.getFirst();
-        System.out.println(board.getBoardView());
 
         for (Player p : players) {
-            System.out.println(p.getName() + ": " + p.getScore());
             if (p.getScore() > winner.getScore()) {
                 winner = p;
             }
         }
 
+        JOptionPane.showMessageDialog(this, "The winner is: " + winner.getName() + "!");
         System.out.println("The winner is: " + winner.getName() + "!");
     }
 
     public void showHelp() {
-        System.out.println("To move input: x y direction word");
-        System.out.println("x y = x y coordinates of word start tile, direction = R or D (right or down), \n word = word you want to play");
-        System.out.println("For the first move it must begin on the coordinates 8 8");
-        System.out.println("Other commands: quit, reset, pass");
+        JOptionPane.showMessageDialog(this, """
+                To place a tile, select it from your hand then select the space on the board in which you'd like to place it.
+                You can remove a previously placed tile (in the same turn) by selecting it again from the board.
+                For the first move it must be on the coordinates 8 8, it doesn't have to begin there, as long as it passes through.
+                A player can skip their turn by clicking the 'Skip Turn' button.
+                The game can be restarted with the current players or a brand new game by using the 'Game' menu.""");
+
     }
 
     public JFrame getFrame() {
@@ -196,15 +201,14 @@ public class ScrabbleView extends JFrame {
         }
     }
 
-    public void removedTempTile(int x, int y) {
+    public void removedTempTile(int x, int y, int handIndex) {
         boardCells[x][y].setText(" ");
-        boardCells[x][y].setBackground(Color.white);
+        boardCells[x][y].setEnabled(true);
+
     }
 
-    public void addTempTile(char tile, int x, int y) {
+    public void addTempTile(char tile, int x, int y, int handIndex) {
         boardCells[x][y].setText(String.valueOf(tile));
-        boardCells[x][y].setBackground(Color.gray);
+        boardCells[x][y].setEnabled(false);
     }
-
-
 }

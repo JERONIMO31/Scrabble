@@ -111,14 +111,15 @@ public class ScrabbleView extends JFrame {
         }
 
         for (int i = 0; i < playerNum; i++) {
-            String name = JOptionPane.showInputDialog(this, "Enter player" + i + "'s name: ");
+            String name = JOptionPane.showInputDialog(this, "Enter player " + i + "'s name: ");
             model.addPlayer(name);
         }
     }
 
     private String getScoreString() {
+        scoreStr = "Scores: ";
         for (Player player : this.model.getPlayers()) {
-            this.scoreStr = "Scores:\n" + player.getName() + ": " + player.getScore() + "\n";
+            scoreStr += (player.getName() + ": " + player.getScore() + " ");
         }
         return scoreStr;
     }

@@ -66,8 +66,8 @@ public class ScrabbleModel {
     /**
      * Checks if a word can be placed on the board at the specified coordinates
      * in the given direction without violating any game rules.
-     * @param x the starting x-coordinate of the word (1-based index).
-     * @param y the starting y-coordinate of the word (1-based index).
+     * @param x the starting x-coordinate of the word.
+     * @param y the starting y-coordinate of the word.
      * @param direction the direction to place the word ('D' for down, 'R' for right).
      * @param word the word to be placed.
      * @return true if the word can be placed, false otherwise.
@@ -282,7 +282,7 @@ public class ScrabbleModel {
         // Update the player's score and switch to the next player
         updatePlayerScore(getEffectedWords(x, y, direction, word), word);
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
-        view.updateBoard();
+        view.updateView();
         return true;
     }
 
@@ -302,6 +302,13 @@ public class ScrabbleModel {
         return board;
     }
 
+    /**
+     * Retrieves the player list.
+     * @return the player list.
+     */
+    public static List<Player> getPlayers() {
+        return players;
+    }
 
     /**
      * Resets the game by reinitializing the board, bag, and players.
@@ -318,7 +325,7 @@ public class ScrabbleModel {
         }
         players = holder;
         board = new Board();
-        view.updateBoard();
+        view.updateView();
     }
 
 }

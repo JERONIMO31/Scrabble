@@ -1,5 +1,4 @@
 import javax.swing.*;
-import java.io.FileNotFoundException;
 import java.util.List;
 import java.awt.*;
 
@@ -43,9 +42,11 @@ public class ScrabbleView extends JFrame {
                 boardCell.setActionCommand("B " + i + " " + j);
                 boardCell.addActionListener(sc);
                 boardCells[i][j] = boardCell;
+                boardCells[i][j].setBackground(Color.pink);
                 boardPanel.add(boardCell);
             }
         }
+        boardCells[8][8].setBackground(Color.yellow);
 
         // Initialize playerHandPanel
         playerHandPanel = new JPanel(new FlowLayout());
@@ -181,43 +182,6 @@ public class ScrabbleView extends JFrame {
 
     public JFrame getFrame() {
         return this;
-    }
-
-    public JButton[][] getBoardCells() {
-        return boardCells;
-    }
-
-    public JButton[] getHandTiles() {
-        return handTiles;
-    }
-
-    public JButton getPlayWordButton() {
-        return playWordButton;
-    }
-
-    public JLabel getScoreLabel() {
-        return scoreLabel;
-    }
-
-    public JMenuItem getResetGameItem() {
-        return resetGameItem;
-    }
-
-    public JMenuItem getResetGameSPItem() {
-        return resetGameSPItem;
-    }
-
-    public JMenuItem getHelpItem() {
-        return helpItem;
-    }
-
-    public void highlightHandTile(int tileIndex) {
-        for (JButton tile : handTiles) {
-            tile.setBackground(Color.white);
-        }
-        if (tileIndex >= 0 && tileIndex < handTiles.length) {
-            handTiles[tileIndex].setBackground(Color.blue);
-        }
     }
 
     public void removeTempTile(int x, int y, int handIndex) {

@@ -1,5 +1,6 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -13,7 +14,7 @@ class PlayedTile{
 }
 
 public class ScrabbleController implements ActionListener {
-    private final ScrabbleModel model;
+    private ScrabbleModel model;
     private final ScrabbleView view;
     private List<PlayedTile> playedTiles;
     private PlayedTile selectedTile;
@@ -40,6 +41,20 @@ public class ScrabbleController implements ActionListener {
         else if (command.equals("P")){
             handlePlayButton();
         }
+        else if (command.equals("HELP")){
+            view.showHelp();
+        }
+        else if (command.equals("RGSP")){
+            model.resetGame();
+        }
+        else if (command.equals("RGNP")){
+            view.showEnd();
+            model = new ScrabbleModel(view);
+            view.updateView();
+        }
+        else if (command.equals("S")){
+            model.skip();
+        }
     }
 
     private PlayedTile getPlayedTileAtXY(int x, int y){
@@ -53,6 +68,7 @@ public class ScrabbleController implements ActionListener {
 
     private void handlePlayButton() {
         if (playedTiles.isEmpty()){
+            handleIllegalMove();
             return;
         }
 
@@ -79,6 +95,7 @@ public class ScrabbleController implements ActionListener {
                 direction = 'D';
             }
             else {
+                handleIllegalMove();
                 return;
             }
         }
@@ -145,23 +162,29 @@ public class ScrabbleController implements ActionListener {
         for (PlayedTile tile : playedTiles){
             if (direction == 'D'){
                 if (tile.x != xStartIndex){
+                    handleIllegalMove();
                     return;
                 }
                 if (tile.y > yFinishIndex || tile.y < yStartIndex){
+                    handleIllegalMove();
                     return;
                 }
             }
             else {
                 if (tile.y != yStartIndex){
+                    handleIllegalMove();
                     return;
                 }
                 if (tile.x > xFinishIndex || tile.x < xStartIndex){
+                    handleIllegalMove();
                     return;
                 }
             }
         }
 
-        model.makeMove(xStartIndex, yStartIndex, direction, word.toString());
+        if (!model.makeMove(xStartIndex, yStartIndex, direction, word.toString())){
+            handleIllegalMove();
+        }
     }
 
     private void handleBoardButton(int x, int y){
@@ -192,77 +215,10 @@ public class ScrabbleController implements ActionListener {
         selectedTile.handIndex = index;
         selectedTile.letter = model.getCurrentPlayer().getHand().get(index).getTileChar();
     }
-//
-//        // Add event listeners to view components
-//        // Add listeners for boardPanel buttons
-//        JButton[][] boardCells = view.getBoardCells();
-//        for (int i = 0; i < boardCells.length; i++) {
-//            for (int j = 0; j < boardCells[i].length; j++) {
-//                final int row = i;
-//                final int col = j;
-//                boardCells[i][j].addActionListener(new ActionListener() {
-//                    @Override
-//                    public void actionPerformed(ActionEvent e) {
-//                        if (model.hasSelectedTile()) {
-//                            model.placeTile(row, col, model.getSelectedTile());
-//                            view.updateBoard(row, col, model.getSelectedTile());
-//                            model.clearSelectedTile();
-//                        }
-//                    }
-//                });
-//            }
-//        }
-//
-//        // Add listeners for playerHandPanel buttons
-//        JButton[] playerHandTiles = view.getHandTiles();
-//        for (int i = 0; i < playerHandTiles.length; i++) {
-//            final int tileIndex = i;
-//            playerHandTiles[i].addActionListener(new ActionListener() {
-//                @Override
-//                public void actionPerformed(ActionEvent e) {
-//                    Tile selectedTile = model.selectTileFromRack(tileIndex);
-//                    view.highlightHandTile(tileIndex);
-//                }
-//            });
-//        }
-//
-//        // Add listeners for controlPanel
-//        view.getPlayWordButton().addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                // Validate the word, update the score, and reset the board and rack if valid
-//                if (model.validateWord()) {
-//                    model.updateScore();
-//                    view.updateScoreDisplay(model.getPlayerScore());
-//                    model.resetBoard();
-//                    view.resetBoardDisplay();
-//                    view.updateRack(model.getPlayerRack());
-//                }
-//                else {
-//                    JOptionPane.showMessageDialog(view.getFrame(), "Invalid word");
-//                }
-//            }
-//        });
-//    }
-//
-//
-//    }
-//
-//    public void startGame() {
-//        System.out.print("How many players? > ");
-//        int numberOfPlayers = this.reader.nextInt();
-//        this.reader.nextLine();
-//        if (numberOfPlayers > 0 && numberOfPlayers <= 4) {
-//            for(int i = 0; i < numberOfPlayers; ++i) {
-//                System.out.print("Enter player " + (i + 1) + "'s name > ");
-//                String name = this.reader.nextLine();
-//                this.model.addPlayer(name);
-//            }
-//
-//            this.model.play();
-//        } else {
-//            throw new IllegalArgumentException("Number of players must be greater than 0 but less then 4");
-//        }
-//    }
+
+    private void handleIllegalMove(){
+        JOptionPane.showMessageDialog(view.getFrame(), "This move is illegal! \n Try again!");
+        view.updateView();
+    }
 
 }

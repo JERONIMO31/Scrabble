@@ -1,5 +1,5 @@
 public class Board {
-    private static Tile[][] board;
+    private Tile[][] board;
 
     /**
      * Constructor for the Board class.

@@ -18,9 +18,8 @@ public class ScrabbleModel {
     /**
      * Constructor for ScrabbleModel.
      * Initializes the board, bag, players list, and loads valid words from a file.
-     * @throws FileNotFoundException if the file containing words is not found.
      */
-    public ScrabbleModel(ScrabbleView view) throws FileNotFoundException {
+    public ScrabbleModel(ScrabbleView view) {
         board = new Board();
         bag = new Bag();
         players = new ArrayList<>();
@@ -28,16 +27,21 @@ public class ScrabbleModel {
         wordSet = new HashSet<>();
         this.loadWordsFromFile();
         firstMove = true;
+        currentPlayerIndex = 0;
     }
 
     /**
      * Loads valid words from a file into a HashSet for fast lookup.
      * The words are expected to be in "src/scrabble.txt".
-     * @throws FileNotFoundException if the file is not found.
      */
-    private void loadWordsFromFile() throws FileNotFoundException {
+    private void loadWordsFromFile() {
         File file = new File("src/scrabble.txt");
-        Scanner scanner = new Scanner(file);
+        Scanner scanner = null;
+        try {
+            scanner = new Scanner(file);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
 
         while (scanner.hasNextLine()) {
             wordSet.add(scanner.nextLine().trim()); // Add each word to the set after trimming whitespace
@@ -287,6 +291,13 @@ public class ScrabbleModel {
     }
 
     /**
+     * Updates currentPlayerIndex
+     */
+    public void skip(){
+        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+    }
+
+    /**
      * Retrieves the current player in the game.
      * @return the current player.
      */
@@ -314,7 +325,7 @@ public class ScrabbleModel {
      * Resets the game by reinitializing the board, bag, and players.
      */
     public void resetGame() {
-        this.view.showEnd(board, players);
+        this.view.showEnd();
         bag = new Bag();
         firstMove = true;
 

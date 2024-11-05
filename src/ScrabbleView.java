@@ -81,6 +81,7 @@ public class ScrabbleView extends JFrame {
     public void updateBoard() {
 
 
+
         Iterator var5 = players.iterator();
 
         PrintStream var10000;

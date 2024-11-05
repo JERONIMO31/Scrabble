@@ -25,26 +25,4 @@ public class Board {
         return board[x - 1][y - 1] == null;
     }
 
-    public String getBoardView() {
-        StringBuilder view = new StringBuilder();
-
-        for(int y = 0; y < 15; ++y) {
-            view.append(y + 1);
-            if (y < 9) {
-                view.append(" ");
-            }
-
-            for(int x = 0; x < 15; ++x) {
-                if (board[x][y] == null) {
-                    view.append("[ ]");
-                } else {
-                    view.append("[").append(board[x][y].getTileChar()).append("]");
-                }
-            }
-
-            view.append("\n");
-        }
-
-        return view.toString();
-    }
 }

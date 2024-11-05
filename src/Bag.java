@@ -7,7 +7,7 @@ public class Bag {
     private static List<Tile> tiles;
 
     public Bag() {
-        tiles = new ArrayList();
+        tiles = new ArrayList<>();
         this.initializeTiles();
         Collections.shuffle(tiles);
     }

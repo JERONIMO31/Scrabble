@@ -11,7 +11,7 @@ public class Player {
     public Player(String name, Bag bag) {
         this.name = name;
         this.bag = bag;
-        this.hand = new ArrayList();
+        this.hand = new ArrayList<>();
         this.myScore = 0;
         this.makeHand();
     }
@@ -32,10 +32,8 @@ public class Player {
 
     public int numInHand(char c) {
         int num = 0;
-        Iterator var3 = this.hand.iterator();
 
-        while(var3.hasNext()) {
-            Tile tile = (Tile)var3.next();
+        for (Tile tile : this.hand) {
             if (tile.equals(c)) {
                 ++num;
             }

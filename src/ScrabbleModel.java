@@ -21,10 +21,10 @@ public class ScrabbleModel {
     public ScrabbleModel() throws FileNotFoundException {
         board = new Board();
         bag = new Bag();
-        players = new ArrayList();
+        players = new ArrayList<>();
         this.view = new ScrabbleView();
         this.controller = new ScrabbleController(this, this.view);
-        wordSet = new HashSet();
+        wordSet = new HashSet<>();
         this.loadWordsFromFile();
     }
 

@@ -30,15 +30,11 @@ public class ScrabbleView {
     }
 
     public void showEnd(Board board, List<Player> players) {
-        Player winner = (Player)players.getFirst();
+        Player winner = players.getFirst();
         System.out.println(board.getBoardView());
-        Iterator var4 = players.iterator();
 
-        while(var4.hasNext()) {
-            Player p = (Player)var4.next();
-            PrintStream var10000 = System.out;
-            String var10001 = p.getName();
-            var10000.println(var10001 + ": " + p.getScore());
+        for (Player p : players) {
+            System.out.println(p.getName() + ": " + p.getScore());
             if (p.getScore() > winner.getScore()) {
                 winner = p;
             }

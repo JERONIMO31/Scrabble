@@ -37,6 +37,131 @@ public class ScrabbleController implements ActionListener {
         else if (command.equals("H")){
             handleHandButton(Integer.parseInt(position[1]));
         }
+        else if (command.equals("P")){
+            handlePlayButton();
+        }
+    }
+
+    private PlayedTile getPlayedTileAtXY(int x, int y){
+        for (PlayedTile tile : playedTiles){
+            if (x == tile.x && y == tile.y){
+                return tile;
+            }
+        }
+        return null;
+    }
+
+    private void handlePlayButton() {
+        if (playedTiles.isEmpty()){
+            return;
+        }
+
+        PlayedTile firstTile = playedTiles.getFirst();
+
+        char direction;
+
+        StringBuilder word = new StringBuilder(String.valueOf(firstTile.letter));
+
+        Board board = model.getBoard();
+
+        int xIndex;
+        int yIndex;
+
+        int xStartIndex;
+        int yStartIndex;
+        int  xFinishIndex;
+        int  yFinishIndex;
+
+        if (playedTiles.size() == 1){
+            if (!board.isEmpty(firstTile.x - 1, firstTile.y) || !board.isEmpty(firstTile.x + 1, firstTile.y)){
+                direction = 'R';
+            } else if (!board.isEmpty(firstTile.x, firstTile.y - 1) || !board.isEmpty(firstTile.x, firstTile.y + 1)){
+                direction = 'D';
+            }
+            else {
+                return;
+            }
+        }
+        else {
+            if (firstTile.x == playedTiles.get(1).x){
+                direction = 'D';
+            }
+            else {direction = 'R';}
+        }
+        if (direction == 'D') {
+            yIndex = firstTile.y + 1;
+            xIndex = firstTile.x;
+            while (!board.isEmpty(xIndex, yIndex) || getPlayedTileAtXY(xIndex, yIndex) != null) {
+                if (!board.isEmpty(xIndex, yIndex)) {
+                    word.append(board.getTile(xIndex, yIndex).getTileChar());
+                }
+                else {
+                    word.append(getPlayedTileAtXY(xIndex, yIndex).letter);
+                }
+                yIndex++;
+            }
+            xFinishIndex = xIndex;
+            yFinishIndex = yIndex;
+            yIndex = firstTile.y - 1;
+            while (!board.isEmpty(xIndex, yIndex) || getPlayedTileAtXY(xIndex, yIndex) != null) {
+
+                if (!board.isEmpty(xIndex, yIndex)) {
+                    word.insert(0, board.getTile(xIndex, yIndex).getTileChar());
+                }
+                else {
+                    word.insert(0, word.append(getPlayedTileAtXY(xIndex, yIndex).letter));
+                }
+                yIndex--;
+            }
+
+        } else {
+            yIndex = firstTile.y;
+            xIndex = firstTile.x + 1;
+            while (!board.isEmpty(xIndex, yIndex) || getPlayedTileAtXY(xIndex, yIndex) != null) {
+                if (!board.isEmpty(xIndex, yIndex)) {
+                    word.append(board.getTile(xIndex, yIndex).getTileChar());
+                }
+                else {
+                    word.append(getPlayedTileAtXY(xIndex, yIndex).letter);
+                }
+                xIndex++;
+            }
+            xFinishIndex = xIndex;
+            yFinishIndex = yIndex;
+            xIndex = firstTile.x - 1;
+            while (!board.isEmpty(xIndex, yIndex) || getPlayedTileAtXY(xIndex, yIndex) != null) {
+                if (!board.isEmpty(xIndex, yIndex)) {
+                    word.insert(0, board.getTile(xIndex, yIndex).getTileChar());
+                }
+                else {
+                    word.insert(0, word.append(getPlayedTileAtXY(xIndex, yIndex).letter));
+                }
+                xIndex--;
+            }
+        }
+        xStartIndex = xIndex;
+        yStartIndex = yIndex;
+
+        for (PlayedTile tile : playedTiles){
+            if (direction == 'D'){
+                if (tile.x != xStartIndex){
+                    return;
+                }
+                if (tile.y > yFinishIndex || tile.y < yStartIndex){
+                    return;
+                }
+            }
+            else {
+                if (tile.y != yStartIndex){
+                    return;
+                }
+                if (tile.x > xFinishIndex || tile.x < xStartIndex){
+                    return;
+                }
+            }
+        }
+
+        model.makeMove(xStartIndex, yStartIndex, direction, word.toString());
     }
 
     private void handleBoardButton(int x, int y){
@@ -44,11 +169,9 @@ public class ScrabbleController implements ActionListener {
             return;
         }
         else if (selectedTile == null){
-            for (PlayedTile tile : playedTiles){
-                if (x == tile.x && y == tile.y){
-                    view.removeTempTile(x, y, tile.handIndex);
-                    return;
-                }
+            PlayedTile tile = getPlayedTileAtXY(x, y);
+            if (tile != null){
+                view.removeTempTile(x, y, tile.handIndex);
             }
         }
         else {

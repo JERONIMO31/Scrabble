@@ -201,7 +201,7 @@ public class ScrabbleView extends JFrame {
         }
     }
 
-    public void removedTempTile(int x, int y, int handIndex) {
+    public void removeTempTile(int x, int y, int handIndex) {
         boardCells[x][y].setText(" ");
         boardCells[x][y].setEnabled(true);
 

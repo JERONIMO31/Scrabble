@@ -18,7 +18,7 @@ public class ScrabbleView extends JFrame {
     private String scoreStr;
 
 
-    public ScrabbleView(ScrabbleModel model) throws FileNotFoundException {
+    public ScrabbleView() {
         // Initialize JFrame
         this.scoreStr = "";
         this.setTitle("Scrabble");
@@ -29,6 +29,9 @@ public class ScrabbleView extends JFrame {
         model = new ScrabbleModel(this);
         
         ScrabbleController sc = new ScrabbleController(this.model, this);
+
+        // Get number of players and add to model
+        this.setPlayers();
 
         // Initialize boardPanel
         boardPanel = new JPanel(new GridLayout(15, 15));
@@ -98,6 +101,19 @@ public class ScrabbleView extends JFrame {
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
+        this.updateView();
+    }
+
+    public void setPlayers() {
+        int playerNum = Integer.parseInt(JOptionPane.showInputDialog(this, "Enter number of players (max 4 players): "));
+        while (playerNum > 4 || playerNum < 1) {
+            playerNum = Integer.parseInt(JOptionPane.showInputDialog(this, "Invalid number of players. Please state 1, 2, 3, or 4: "));
+        }
+
+        for (int i = 0; i < playerNum; i++) {
+            String name = JOptionPane.showInputDialog(this, "Enter player" + i + "'s name: ");
+            model.addPlayer(name);
+        }
     }
 
     private String getScoreString() {
@@ -132,12 +148,14 @@ public class ScrabbleView extends JFrame {
 
         // Update the players current scores
         scoreStr = getScoreString();
+        scoreLabel.setText(scoreStr);
 
         // Update the current player
         playerName.setText(model.getCurrentPlayer().getName());
     }
 
-    public void showEnd(Board board, List<Player> players) {
+    public void showEnd() {
+        List<Player> players = model.getPlayers();
         Player winner = players.getFirst();
 
         for (Player p : players) {
@@ -211,4 +229,9 @@ public class ScrabbleView extends JFrame {
         boardCells[x][y].setText(String.valueOf(tile));
         boardCells[x][y].setEnabled(false);
     }
+
+    public static void main(String[] args) {
+        new ScrabbleView();
+    }
+
 }

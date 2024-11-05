@@ -24,7 +24,7 @@ public class ScrabbleView extends JFrame {
         this.setTitle("Scrabble");
         this.setLayout(new BorderLayout());
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(500, 500);
+        this.setSize(1000, 1000);
 
         model = new ScrabbleModel(this);
         
@@ -39,7 +39,7 @@ public class ScrabbleView extends JFrame {
         for (int i = 0; i < 15; i++) {
             for (int j = 0; j < 15; j++) {
                 JButton boardCell = new JButton();
-                boardCell.setPreferredSize(new Dimension(40, 40));
+                boardCell.setPreferredSize(new Dimension(50, 50));
                 boardCell.setActionCommand("B " + i + " " + j);
                 boardCell.addActionListener(sc);
                 boardCells[i][j] = boardCell;
@@ -54,7 +54,7 @@ public class ScrabbleView extends JFrame {
         playerHandPanel.add(playerName);
         for (int i = 0; i < 7; i++) {
             handTiles[i] = new JButton(" ");
-            handTiles[i].setPreferredSize(new Dimension(40, 40));
+            handTiles[i].setPreferredSize(new Dimension(50, 50));
             handTiles[i].setActionCommand("H " + i);
             handTiles[i].addActionListener(sc);
             playerHandPanel.add(handTiles[i]);
@@ -111,7 +111,7 @@ public class ScrabbleView extends JFrame {
         }
 
         for (int i = 0; i < playerNum; i++) {
-            String name = JOptionPane.showInputDialog(this, "Enter player " + i + "'s name: ");
+            String name = JOptionPane.showInputDialog(this, "Enter player " + (i + 1) + "'s name: ");
             model.addPlayer(name);
         }
     }
@@ -228,7 +228,7 @@ public class ScrabbleView extends JFrame {
 
     public void addTempTile(char tile, int x, int y, int handIndex) {
         boardCells[x][y].setText(String.valueOf(tile));
-        boardCells[x][y].setEnabled(false);
+        handTiles[handIndex].setEnabled(false);
     }
 
     public static void main(String[] args) {

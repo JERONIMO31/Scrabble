@@ -259,6 +259,8 @@ public class ScrabbleModel {
      * @return true if the move is successful, false otherwise.
      */
     public boolean makeMove(int x, int y, char direction, String word) {
+        word = word.toLowerCase();
+
         int xIndex;
         int yIndex;
 

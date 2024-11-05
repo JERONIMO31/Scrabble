@@ -45,14 +45,20 @@ public class ScrabbleController implements ActionListener {
             view.showHelp();
         }
         else if (command.equals("RGSP")){
+            this.playedTiles = new ArrayList<>();
+            this.selectedTile = null;
             model.resetGame();
         }
         else if (command.equals("RGNP")){
+            this.playedTiles = new ArrayList<>();
+            this.selectedTile = null;
             view.showEnd();
             model = new ScrabbleModel(view);
             view.updateView();
         }
         else if (command.equals("S")){
+            this.playedTiles = new ArrayList<>();
+            this.selectedTile = null;
             model.skip();
         }
     }
@@ -67,6 +73,7 @@ public class ScrabbleController implements ActionListener {
     }
 
     private void handlePlayButton() {
+
         if (playedTiles.isEmpty()){
             handleIllegalMove();
             return;
@@ -185,6 +192,8 @@ public class ScrabbleController implements ActionListener {
         if (!model.makeMove(xStartIndex, yStartIndex, direction, word.toString())){
             handleIllegalMove();
         }
+        this.playedTiles = new ArrayList<>();
+        this.selectedTile = null;
     }
 
     private void handleBoardButton(int x, int y){
@@ -202,6 +211,7 @@ public class ScrabbleController implements ActionListener {
             selectedTile.x = x;
             selectedTile.y = y;
             playedTiles.add(selectedTile);
+            selectedTile = null;
         }
     }
 
@@ -217,6 +227,8 @@ public class ScrabbleController implements ActionListener {
     }
 
     private void handleIllegalMove(){
+        this.playedTiles = new ArrayList<>();
+        this.selectedTile = null;
         JOptionPane.showMessageDialog(view.getFrame(), "This move is illegal! \n Try again!");
         view.updateView();
     }

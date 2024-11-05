@@ -17,8 +17,6 @@ public class ScrabbleView extends JFrame {
     private final JMenuItem resetGameItem, resetGameSPItem;
 
 
-
-
     public ScrabbleView(ScrabbleModel model) {
         // Initialize JFrame
         this.setTitle("Scrabble");
@@ -41,6 +39,7 @@ public class ScrabbleView extends JFrame {
         // Initialize playerHandPanel
         playerHandPanel = new JPanel(new FlowLayout());
         handTiles = new JButton[7];
+        playerHandPanel.add(new JTextField(model.getCurrentPlayer().getName() + "'s turn:"));
         for (int i = 0; i < 7; i++) {
             handTiles[i] = new JButton(" ");
             handTiles[i].setPreferredSize(new Dimension(40, 40));
@@ -79,7 +78,9 @@ public class ScrabbleView extends JFrame {
         setVisible(true);
     }
 
-    public void showBoard(Board board, Player player, Bag bag, List<Player> players) {
+    public void updateBoard() {
+
+
         Iterator var5 = players.iterator();
 
         PrintStream var10000;

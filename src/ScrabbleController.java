@@ -1,6 +1,9 @@
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Scanner;
+import javax.swing.*;
 
-public class ScrabbleController {
+public class ScrabbleController implements ActionListener {
     private final ScrabbleModel model;
     private final ScrabbleView view;
     private Scanner reader;
@@ -13,6 +16,57 @@ public class ScrabbleController {
         } else {
             throw new IllegalArgumentException("Model or View is null");
         }
+
+        // Add event listeners to view components
+        // Add listeners for boardPanel buttons
+        JButton[][] boardCells = view.getBoardCells();
+        for (int i = 0; i < boardCells.length; i++) {
+            for (int j = 0; j < boardCells[i].length; j++) {
+                final int row = i;
+                final int col = j;
+                boardCells[i][j].addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        if (model.hasSelectedTile()) {
+                            model.placeTile(row, col, model.getSelectedTile());
+                            view.updateBoard(row, col, model.getSelectedTile());
+                            model.clearSelectedTile();
+                        }
+                    }
+                });
+            }
+        }
+
+        // Add listeners for playerHandPanel buttons
+        JButton[] playerHandTiles = view.getHandTiles();
+        for (int i = 0; i < playerHandTiles.length; i++) {
+            final int tileIndex = i;
+            playerHandTiles[i].addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    Tile selectedTile = model.selectTileFromRack(tileIndex);
+                    view.highlightHandTile(tileIndex);
+                }
+            });
+        }
+
+        // Add listeners for controlPanel
+        view.getPlayWordButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Validate the word, update the score, and reset the board and rack if valid
+                if (model.validateWord()) {
+                    model.updateScore();
+                    view.updateScoreDisplay(model.getPlayerScore());
+                    model.resetBoard();
+                    view.resetBoardDisplay();
+                    view.updateRack(model.getPlayerRack());
+                }
+                else {
+                    JOptionPane.showMessageDialog(view.getFrame(), "Invalid word");
+                }
+            }
+        });
     }
 
     public void getCommand() {
@@ -114,4 +168,5 @@ public class ScrabbleController {
             throw new IllegalArgumentException("Number of players must be greater than 0 but less then 4");
         }
     }
+
 }

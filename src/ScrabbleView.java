@@ -7,33 +7,41 @@ import java.awt.*;
 
 public class ScrabbleView extends JFrame {
     private final JPanel boardPanel;
+    private final JButton[][] boardCells;
     private final JPanel playerHandPanel;
+    private final JButton[] handTiles;
     private final JPanel scorePanel;
+    private final JLabel scoreLabel;
     private final JPanel controlPanel;
+    private final JButton playWordButton;
 
 
     public ScrabbleView(ScrabbleModel model) {
         // Initialize JFrame
         this.setTitle("Scrabble");
+        this.setLayout(new BorderLayout());
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(500, 500);
 
         // Initialize boardPanel
         boardPanel = new JPanel(new GridLayout(15, 15));
+        boardCells = new JButton[15][15];
         for (int i = 0; i < 15; i++) {
             for (int j = 0; j < 15; j++) {
                 JButton boardCell = new JButton();
                 boardCell.setPreferredSize(new Dimension(40, 40));
+                boardCells[i][j] = boardCell;
                 boardPanel.add(boardCell);
             }
         }
 
         // Initialize playerHandPanel
         playerHandPanel = new JPanel(new FlowLayout());
+        handTiles = new JButton[7];
         for (int i = 0; i < 7; i++) {
-            JButton tileInHand = new JButton(" ");
-            tileInHand.setPreferredSize(new Dimension(40, 40));
-            playerHandPanel.add(tileInHand);
+            handTiles[i] = new JButton(" ");
+            handTiles[i].setPreferredSize(new Dimension(40, 40));
+            playerHandPanel.add(handTiles[i]);
         }
 
         // Initialize scorePanel
@@ -42,11 +50,12 @@ public class ScrabbleView extends JFrame {
         for (Player player : model.getAllPlayers()) {
             scoreStr += player.getName() + ": " + player.getScore() + "\n";
         }
-        JLabel scoreLabel = new JLabel(scoreStr);
+        scoreLabel = new JLabel(scoreStr);
+        scorePanel.add(scoreLabel);
 
         // Initialize controlPanel
         controlPanel = new JPanel();
-        JButton playWordButton = new JButton("Play Word");
+        playWordButton = new JButton("Play Word");
         controlPanel.add(playWordButton);
 
 
@@ -108,15 +117,29 @@ public class ScrabbleView extends JFrame {
         return this;
     }
 
-    public JPanel getBoardPanel() {
-        return boardPanel;
+    public JButton[][] getBoardCells() {
+        return boardCells;
     }
 
-    public JPanel getScorePanel() {
-        return scorePanel;
+    public JButton[] getHandTiles() {
+        return handTiles;
     }
 
-    public JPanel getControlPanel() {
-        return controlPanel;
+    public JButton getPlayWordButton() {
+        return playWordButton;
+    }
+
+    public JLabel getScoreLabel() {
+        return scoreLabel;
+    }
+
+    public void highlightHandTile(int tileIndex) {
+        for (JButton tile : handTiles) {
+            tile.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+        }
+
+        if (tileIndex >= 0 && tileIndex < handTiles.length) {
+            handTiles[tileIndex].setBorder(BorderFactory.createLineBorder(Color.BLUE, 3));
+        }
     }
 }

@@ -76,6 +76,10 @@ public class Player {
         return this.name;
     }
 
+    public List<Tile> getHand() {
+        return this.hand;
+    }
+
     public String getHandView() {
         String handStr = "Value:";
 

@@ -29,7 +29,7 @@ public class ScrabbleModel {
     }
 
     private void loadWordsFromFile() throws FileNotFoundException {
-        File file = new File("scrabble.txt");
+        File file = new File("src/scrabble.txt");
         Scanner scanner = new Scanner(file);
 
         while(scanner.hasNextLine()) {

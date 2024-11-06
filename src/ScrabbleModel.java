@@ -10,7 +10,7 @@ public class ScrabbleModel {
     private static List<Player> players;
     private static Board board;
     private static Bag bag;
-    private ScrabbleView view;
+    private final ScrabbleView view;
     private static int currentPlayerIndex;
     private static HashSet<String> wordSet;
     private static Boolean firstMove;
@@ -36,7 +36,7 @@ public class ScrabbleModel {
      */
     private void loadWordsFromFile() {
         File file = new File("src/scrabble.txt");
-        Scanner scanner = null;
+        Scanner scanner;
         try {
             scanner = new Scanner(file);
         } catch (FileNotFoundException e) {
@@ -86,7 +86,7 @@ public class ScrabbleModel {
             return false;
         }
 
-        Boolean isTouching = false; // Used to ensure that at least one tile is touching the existing placed tiles
+        boolean isTouching = false; // Used to ensure that at least one tile is touching the existing placed tiles
 
         // Iterate over the characters in the word and check the placement on the board
         for (int i = 0; i < word.length(); i++) {

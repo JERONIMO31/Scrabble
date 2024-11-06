@@ -151,7 +151,6 @@ public class ScrabbleModel {
     private boolean isValid(int x, int y, char direction, String word) {
         // Check if the word can be placed
         if (!isPossible(x, y, direction, word)) {
-            System.out.println("is not possible");
             return false;
         }
 

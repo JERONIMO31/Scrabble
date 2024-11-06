@@ -1,20 +1,15 @@
 import javax.swing.*;
 import java.util.List;
 import java.awt.*;
+import java.awt.event.*;
 
 public class ScrabbleView extends JFrame {
     ScrabbleModel model;
     ScrabbleController sc;
-    private final JPanel boardPanel;
     private final JButton[][] boardCells;
-    private final JPanel playerHandPanel;
     private final JButton[] handTiles;
-    private final JTextField playerName;
-    private final JPanel scorePanel;
+    private final JLabel playerName;
     private final JLabel scoreLabel;
-    private final JPanel controlPanel;
-    private final JButton playWordButton, skipButton;
-    private final JMenuItem resetGameItem, resetGameSPItem, helpItem;
     private String scoreStr;
 
     /**
@@ -35,70 +30,85 @@ public class ScrabbleView extends JFrame {
         // Get number of players and add to model
         this.setPlayers();
 
-        // Initialize boardPanel
-        boardPanel = new JPanel(new GridLayout(15, 15));
+        // Initialize panel to contain the board
+        JPanel boardPanel = new JPanel(new GridLayout(15, 15));
+        boardPanel.setBackground(null);
         boardCells = new JButton[15][15];
         for (int i = 0; i < 15; i++) {
             for (int j = 0; j < 15; j++) {
                 JButton boardCell = new JButton();
                 boardCell.setPreferredSize(new Dimension(50, 50));
                 boardCell.setActionCommand("B " + i + " " + j);
-                boardCell.addActionListener(sc); // Set up board cell to respond to controller
+                boardCell.addActionListener(sc); // Set up board cell actionListener
                 boardCells[i][j] = boardCell;
+                boardCells[i][j].setBorder(BorderFactory.createLineBorder(Color.black)); // Set black borders
                 boardCells[i][j].setBackground(Color.pink);
+                mouseListener(boardCells[i][j], null, null, 2); // Set hover border to red
                 boardPanel.add(boardCell);
             }
         }
         boardCells[7][7].setBackground(Color.yellow); // Highlight center tile for first move requirement
 
-        // Initialize playerHandPanel
-        playerHandPanel = new JPanel(new FlowLayout());
+        // Initialize panel for the players name, hand, and play/skip buttons
+        JPanel playerHandPanel = new JPanel(new FlowLayout());
         handTiles = new JButton[7];
-        playerName = new JTextField(model.getCurrentPlayer().getName() + "'s turn:");
+        playerName = new JLabel(model.getCurrentPlayer().getName() + "'s hand:");
+        playerName.setSize(60, 50);
         playerHandPanel.add(playerName);
         for (int i = 0; i < 7; i++) {
             handTiles[i] = new JButton(" ");
             handTiles[i].setPreferredSize(new Dimension(50, 50));
             handTiles[i].setActionCommand("H " + i);
-            handTiles[i].addActionListener(sc); // Set up hand tile to respond to controller
+            handTiles[i].addActionListener(sc); // Set up hand tile actionListener
+            handTiles[i].setBorder(BorderFactory.createLineBorder(Color.black)); // Set black borders
+            mouseListener(handTiles[i], null, null, 1); // Set hover border to pink
             playerHandPanel.add(handTiles[i]);
         }
 
-        // Initialize controlPanel and buttons
-        controlPanel = new JPanel();
+        // Initialize panel for the control buttons
+        JPanel controlPanel = new JPanel();
         controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.Y_AXIS));
-        playWordButton = new JButton("Play Word");
-        skipButton = new JButton("Skip Turn");
+        JButton playWordButton = new JButton("Play Word");
+        JButton skipButton = new JButton("Skip Turn");
 
         playWordButton.setActionCommand("P");
-        playWordButton.addActionListener(sc); // Play word action
+        playWordButton.addActionListener(sc); // Play word actionListener
+        playWordButton.setBackground(Color.cyan);
 
         skipButton.setActionCommand("S");
-        skipButton.addActionListener(sc); // Skip turn action
+        skipButton.addActionListener(sc); // Skip turn actionListener
+        skipButton.setBackground(Color.green);
 
-        controlPanel.add(skipButton);
         controlPanel.add(playWordButton);
+        controlPanel.add(skipButton);
 
-        // Initialize scorePanel
-        scorePanel = new JPanel();
+        controlPanel.setSize(60, 50);
+        playerHandPanel.add(controlPanel); // Add to playerHandPanel
+
+        // Initialize panel for displaying the scores
+        JPanel scorePanel = new JPanel();
         scoreStr = getScoreString();
         scoreLabel = new JLabel(scoreStr);
         scorePanel.add(scoreLabel);
 
         // Add gameMenu and items
         JMenu gameMenu = new JMenu("Game");
-        resetGameSPItem = new JMenuItem("Restart game (with same players)");
-        resetGameItem = new JMenuItem("New game (with new players)");
-        helpItem = new JMenuItem("Help");
+        mouseListener(null, gameMenu, null, 2); // Set hover border to pink
+        JMenuItem resetGameSPItem = new JMenuItem("Restart game (with same players)");
+        mouseListener(null, null, resetGameSPItem, 2); // Set hover border to pink
+        JMenuItem resetGameItem = new JMenuItem("New game (with new players)");
+        mouseListener(null, null, resetGameItem, 2); // Set hover border to pink
+        JMenuItem helpItem = new JMenuItem("Help");
+        mouseListener(null, null, helpItem, 2); // Set hover border to pink
 
         helpItem.setActionCommand("HELP");
         helpItem.addActionListener(sc); // Help action
 
         resetGameSPItem.setActionCommand("RGSP");
-        resetGameSPItem.addActionListener(sc); // Restart game with same players
+        resetGameSPItem.addActionListener(sc); // Restart game with same players actionListener
 
         resetGameItem.setActionCommand("RGNP");
-        resetGameItem.addActionListener(sc); // New game with new players
+        resetGameItem.addActionListener(sc); // New game with new players actionListener
 
         JMenuBar menuBar = new JMenuBar();
         gameMenu.add(resetGameItem);
@@ -106,14 +116,12 @@ public class ScrabbleView extends JFrame {
         gameMenu.add(helpItem);
 
         menuBar.add(gameMenu);
-        // Add menu bar to frame
         this.setJMenuBar(menuBar); // Add menu bar to frame
 
         // Add panels to the frame
         add(boardPanel, BorderLayout.CENTER);
         add(playerHandPanel, BorderLayout.SOUTH);
         add(scorePanel, BorderLayout.NORTH);
-        add(controlPanel, BorderLayout.EAST);
 
         pack(); // Adjust frame to fit components
         setLocationRelativeTo(null); // Center frame on screen
@@ -160,10 +168,12 @@ public class ScrabbleView extends JFrame {
                 if (board.isEmpty(i, j)) {
                     boardCells[i][j].setText(" ");
                     boardCells[i][j].setEnabled(true);
+                    mouseListener(boardCells[i][j], null, null, 2); // Set border to red
                 }
                 else {
                     boardCells[i][j].setText(String.valueOf(board.getTile(i, j).getTileChar()));
                     boardCells[i][j].setEnabled(false);
+                    mouseListener(boardCells[i][j], null, null, 3); // Set border to black
                 }
             }
         }
@@ -172,6 +182,7 @@ public class ScrabbleView extends JFrame {
         for (int i = 0; i < model.getCurrentPlayer().getHand().size(); i++) {
             handTiles[i].setText(String.valueOf(model.getCurrentPlayer().getHand().get(i).getTileChar()));
             handTiles[i].setEnabled(true);
+            mouseListener(handTiles[i], null, null, 1); // Set border to pink
         }
 
         // Update the players current scores
@@ -179,8 +190,103 @@ public class ScrabbleView extends JFrame {
         scoreLabel.setText(scoreStr);
 
         // Update the current player
-        playerName.setText(model.getCurrentPlayer().getName());
-        playerName.setEditable(false);
+        playerName.setText(model.getCurrentPlayer().getName() + "'s hand:");
+    }
+
+    /**
+     * Adds a MouseListener to a button, menu, or menu item.
+     * @param button The JButton to add the listener to.
+     * @param menu The JMenu to add the listener to.
+     * @param item The JMenuItem to add the listener to.
+     * @param type Indicates if hover border should be pink, red or black (1, 2, 3 respectively).
+     */
+    private void mouseListener(JButton button, JMenu menu, JMenuItem item, int type) {
+        // Check for a JButton
+        if (button != null) {
+            // Depending on type, add different mouse listeners to the button
+            if (type == 1) {
+                // Add a mouse listener to the button
+                button.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseEntered(MouseEvent e) {
+                        // Change the button border to pink when mouse enters
+                        button.setBorder(BorderFactory.createLineBorder(Color.pink));
+                    }
+
+                    @Override
+                    public void mouseExited(MouseEvent e) {
+                        // Reset the button border to black when mouse exits
+                        button.setBorder(BorderFactory.createLineBorder(Color.black));
+                    }
+                });
+            }
+            else if (type == 2) {
+                // Add a mouse listener to the button
+                button.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseEntered(MouseEvent e) {
+                        // Change the button border to red when mouse enters
+                        button.setBorder(BorderFactory.createLineBorder(Color.red));
+                    }
+
+                    @Override
+                    public void mouseExited(MouseEvent e) {
+                        // Reset the button border to black when mouse exits
+                        button.setBorder(BorderFactory.createLineBorder(Color.black));
+                    }
+                });
+            }
+            else if (type == 3) {
+                // Add a mouse listener to the button
+                button.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseEntered(MouseEvent e) {
+                        // No change in button border on mouse enter
+                        button.setBorder(BorderFactory.createLineBorder(Color.black));
+                    }
+
+                    @Override
+                    public void mouseExited(MouseEvent e) {
+                        // No change in button border on mouse exit
+                        button.setBorder(BorderFactory.createLineBorder(Color.black));
+                    }
+                });
+            }
+        }
+        // Check for JMenu
+        if (menu != null) {
+            // Add a mouse listener to the menu
+            menu.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    // Change the menu border to pink when mouse enters
+                    menu.setBorder(BorderFactory.createLineBorder(Color.pink));
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    // Remove the border when mouse exits
+                    menu.setBorder(null);
+                }
+            });
+        }
+        // Check for JMenuItem
+        if (item != null) {
+            // Add a mouse listener to the menu item
+            item.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    // Change the item border to pink when mouse enters
+                    item.setBorder(BorderFactory.createLineBorder(Color.pink));
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    // Remove the border when mouse exits
+                    item.setBorder(null);
+                }
+            });
+        }
     }
 
     /**
@@ -230,6 +336,7 @@ public class ScrabbleView extends JFrame {
         boardCells[x][y].setText(" ");
         boardCells[x][y].setEnabled(true);
         handTiles[handIndex].setEnabled(true);
+        mouseListener(handTiles[handIndex], null, null, 1); // Set border to pink
     }
 
    /**
@@ -239,6 +346,7 @@ public class ScrabbleView extends JFrame {
     public void addTempTile(char tile, int x, int y, int handIndex) {
         boardCells[x][y].setText(String.valueOf(tile));
         handTiles[handIndex].setEnabled(false);
+        mouseListener(handTiles[handIndex], null, null, 3); // Set border to black
     }
 
     /**

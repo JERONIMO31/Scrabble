@@ -46,7 +46,7 @@ public class ScrabbleView extends JFrame {
                 boardPanel.add(boardCell);
             }
         }
-        boardCells[8][8].setBackground(Color.yellow);
+        boardCells[7][7].setBackground(Color.yellow);
 
         // Initialize playerHandPanel
         playerHandPanel = new JPanel(new FlowLayout());
@@ -89,15 +89,19 @@ public class ScrabbleView extends JFrame {
         resetGameItem.setActionCommand("RGNP");
         resetGameItem.addActionListener(sc);
 
+        JMenuBar menuBar = new JMenuBar();
         gameMenu.add(resetGameItem);
         gameMenu.add(resetGameSPItem);
         gameMenu.add(helpItem);
+
+        menuBar.add(gameMenu);
 
         // Add panels to the frame
         add(boardPanel, BorderLayout.CENTER);
         add(playerHandPanel, BorderLayout.SOUTH);
         add(scorePanel, BorderLayout.NORTH);
         add(controlPanel, BorderLayout.EAST);
+        add(menuBar, BorderLayout.WEST);
 
         pack();
         setLocationRelativeTo(null);
@@ -187,7 +191,7 @@ public class ScrabbleView extends JFrame {
     public void removeTempTile(int x, int y, int handIndex) {
         boardCells[x][y].setText(" ");
         boardCells[x][y].setEnabled(true);
-
+        handTiles[handIndex].setEnabled(true);
     }
 
     public void addTempTile(char tile, int x, int y, int handIndex) {

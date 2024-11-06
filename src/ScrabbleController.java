@@ -54,7 +54,6 @@ public class ScrabbleController implements ActionListener {
             this.selectedTile = null;
             view.showEnd();
             model = new ScrabbleModel(view);
-            view.updateView();
         }
         else if (command.equals("S")){
             this.playedTiles = new ArrayList<>();
@@ -125,7 +124,7 @@ public class ScrabbleController implements ActionListener {
                 yIndex++;
             }
             xFinishIndex = xIndex;
-            yFinishIndex = yIndex;
+            yFinishIndex = yIndex - 1;
             yIndex = firstTile.y - 1;
             while (!board.isEmpty(xIndex, yIndex) || getPlayedTileAtXY(xIndex, yIndex) != null) {
 
@@ -137,6 +136,8 @@ public class ScrabbleController implements ActionListener {
                 }
                 yIndex--;
             }
+            xStartIndex = xIndex;
+            yStartIndex = yIndex + 1;
 
         } else {
             yIndex = firstTile.y;
@@ -150,7 +151,7 @@ public class ScrabbleController implements ActionListener {
                 }
                 xIndex++;
             }
-            xFinishIndex = xIndex;
+            xFinishIndex = xIndex - 1;
             yFinishIndex = yIndex;
             xIndex = firstTile.x - 1;
             while (!board.isEmpty(xIndex, yIndex) || getPlayedTileAtXY(xIndex, yIndex) != null) {
@@ -162,9 +163,9 @@ public class ScrabbleController implements ActionListener {
                 }
                 xIndex--;
             }
+            xStartIndex = xIndex + 1;
+            yStartIndex = yIndex;
         }
-        xStartIndex = xIndex;
-        yStartIndex = yIndex;
 
         for (PlayedTile tile : playedTiles){
             if (direction == 'D'){
@@ -204,6 +205,12 @@ public class ScrabbleController implements ActionListener {
             PlayedTile tile = getPlayedTileAtXY(x, y);
             if (tile != null){
                 view.removeTempTile(x, y, tile.handIndex);
+                for (int i = 0; i < playedTiles.size(); i++){
+                    if (playedTiles.get(i).x == x && playedTiles.get(i).y == y){
+                        playedTiles.remove(i);
+                        break;
+                    }
+                }
             }
         }
         else {

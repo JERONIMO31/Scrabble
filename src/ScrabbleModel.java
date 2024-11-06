@@ -86,6 +86,8 @@ public class ScrabbleModel {
             return false;
         }
 
+        Boolean isTouching = false; // Used to ensure that at least one tile is touching the existing placed tiles
+
         // Iterate over the characters in the word and check the placement on the board
         for (int i = 0; i < word.length(); i++) {
             char c = word.charAt(i);
@@ -99,9 +101,16 @@ public class ScrabbleModel {
             if (board.isEmpty(xIndex, yIndex)) {
                 // Count the occurrences of each character that need to be placed
                 charMap.put(c, charMap.getOrDefault(c, 0) + 1);
+
+                if (!board.isEmpty(xIndex + 1, yIndex) || !board.isEmpty(xIndex - 1, yIndex) ||
+                        !board.isEmpty(xIndex, yIndex + 1)  || !board.isEmpty(xIndex, yIndex - 1) ){
+                    isTouching = true;
+                }
+
             } else if (!board.getTile(xIndex, yIndex).equals(c)) {
                 return false;  // The board contains a different character at this position
             }
+            else {isTouching = true;}
         }
 
         // Check if the player has enough of each character in their hand
@@ -111,7 +120,24 @@ public class ScrabbleModel {
             }
         }
 
-        return true;
+        // Handle special case for the first move (must include the center tile)
+        if (firstMove) {
+            xIndex = x;
+            yIndex = y;
+            for (int i = 0; i < word.length(); i++) {
+                if (xIndex == 7 && yIndex == 7) {
+                    firstMove = false;
+                    return true;
+                }
+                if (direction == 'D') {
+                    yIndex = y + i;
+                } else {
+                    xIndex = x + i;
+                }
+            }
+            return false;
+        }
+        return isTouching;
     }
 
     /**
@@ -125,30 +151,12 @@ public class ScrabbleModel {
     private boolean isValid(int x, int y, char direction, String word) {
         // Check if the word can be placed
         if (!isPossible(x, y, direction, word)) {
-            return false;
-        }
-
-        // Handle special case for the first move (must include the center tile)
-        if (firstMove) {
-            int xIndex = x;
-            int yIndex = y;
-            for (int i = 0; i < word.length(); i++) {
-                if (xIndex == 8 && yIndex == 8) {
-                    firstMove = false;
-                    return true;
-                }
-                if (direction == 'D') {
-                    yIndex = y + i;
-                } else {
-                    xIndex = x + i;
-                }
-            }
+            System.out.println("is not possible");
             return false;
         }
 
         // Validate all affected words on the board
         List<String> effectedWords = getEffectedWords(x, y, direction, word);
-        if (effectedWords.size() > 1) { return false; }
         for (String effectedWord : effectedWords) {
             if (!isWord(effectedWord)) {
                 return false;

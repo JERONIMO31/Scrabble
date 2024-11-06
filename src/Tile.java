@@ -11,25 +11,25 @@ public class Tile {
     }
 
     public static int getTileScore(char tile) {
-        if (tile == 'A'||tile == 'E'||tile == 'I'||tile == 'O'||tile == 'U'||tile == 'L'||tile == 'N'||tile == 'S'||tile == 'T'||tile == 'R') {
+        if (tile == 'a'||tile == 'e'||tile == 'i'||tile == 'o'||tile == 'u'||tile == 'l'||tile == 'n'||tile == 's'||tile == 't'||tile == 'r') {
             return 1;
         }
-        else if (tile == 'D'||tile == 'G') {
+        else if (tile == 'd'||tile == 'g') {
             return 2;
         }
-        else if (tile == 'B'||tile == 'C'||tile == 'M'||tile == 'P') {
+        else if (tile == 'b'||tile == 'c'||tile == 'm'||tile == 'p') {
             return 3;
         }
-        else if (tile == 'F'||tile == 'H'||tile == 'V'||tile == 'W'||tile == 'Y') {
+        else if (tile == 'f'||tile == 'h'||tile == 'v'||tile == 'w'||tile == 'y') {
             return 4;
         }
-        else if (tile == 'K') {
+        else if (tile == 'k') {
             return 5;
         }
-        else if (tile == 'J'||tile == 'X') {
+        else if (tile == 'j'||tile == 'x') {
             return 8;
         }
-        else if (tile == 'Q'||tile == 'Z') {
+        else if (tile == 'q'||tile == 'z') {
             return 10;
         }
         else {

@@ -98,6 +98,7 @@ public class ScrabbleView extends JFrame {
         add(playerHandPanel, BorderLayout.SOUTH);
         add(scorePanel, BorderLayout.NORTH);
         add(controlPanel, BorderLayout.EAST);
+        add(gameMenu, BorderLayout.NORTH);
 
         pack();
         setLocationRelativeTo(null);

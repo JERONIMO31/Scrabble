@@ -42,7 +42,11 @@ public class Board {
      * @return the Tile object at the specified position, or null if the position is empty
      */
     public Tile getTile(int x, int y) {
-        return board[x][y];  // Return the tile at the given position
+        if (x <= 14 && x >= 0 && y <= 14 && y >= 0) {
+            return board[x][y];  // Return the tile at the given position
+        }
+        else {return null;}
+
     }
 
     /**
@@ -53,6 +57,9 @@ public class Board {
      * @return true if the position is empty (null), false if occupied by a tile
      */
     public boolean isEmpty(int x, int y) {
-        return board[x][y] == null;  // Return true if the position is empty
+        if (x <= 14 && x >= 0 && y <= 14 && y >= 0) {
+            return board[x][y] == null;  // Return true if the position is empty
+        }
+        else {return true;}
     }
 }

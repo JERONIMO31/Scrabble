@@ -68,7 +68,7 @@ public class ScrabbleView extends JFrame {
         controlPanel = new JPanel();
         controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.Y_AXIS));
         playWordButton = new JButton("Play Word");
-        skipButton = new JButton("Play Word");
+        skipButton = new JButton("Skip Turn");
 
         playWordButton.setActionCommand("P");
         playWordButton.addActionListener(sc); // Play word action
@@ -91,8 +91,8 @@ public class ScrabbleView extends JFrame {
         resetGameItem = new JMenuItem("New game (with new players)");
         helpItem = new JMenuItem("Help");
 
-        resetGameSPItem.setActionCommand("HELP");
-        resetGameSPItem.addActionListener(sc); // Help action
+        helpItem.setActionCommand("HELP");
+        helpItem.addActionListener(sc); // Help action
 
         resetGameSPItem.setActionCommand("RGSP");
         resetGameSPItem.addActionListener(sc); // Restart game with same players
@@ -197,7 +197,6 @@ public class ScrabbleView extends JFrame {
         }
 
         JOptionPane.showMessageDialog(this, "The winner is: " + winner.getName() + "!");
-        System.out.println("The winner is: " + winner.getName() + "!");
     }
 
      /**
@@ -251,6 +250,7 @@ public class ScrabbleView extends JFrame {
         model = new ScrabbleModel(this);
         sc.setModel(model);
         this.setPlayers();
+        this.updateView();
     }
 
     public static void main(String[] args) {

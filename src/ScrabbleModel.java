@@ -125,14 +125,14 @@ public class ScrabbleModel {
             xIndex = x;
             yIndex = y;
             for (int i = 0; i < word.length(); i++) {
-                if (xIndex == 7 && yIndex == 7) {
-                    firstMove = false;
-                    return true;
-                }
                 if (direction == 'D') {
                     yIndex = y + i;
                 } else {
                     xIndex = x + i;
+                }
+                if (xIndex == 7 && yIndex == 7) {
+                    firstMove = false;
+                    return true;
                 }
             }
             return false;
@@ -304,6 +304,7 @@ public class ScrabbleModel {
      */
     public void skip(){
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+        view.updateView();
     }
 
     /**

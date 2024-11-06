@@ -62,13 +62,13 @@ public class ScrabbleController implements ActionListener {
             case "RGSP" -> {
                 this.playedTiles = new ArrayList<>();
                 this.selectedTile = null;
-                model.resetGame();
+                model.resetGame(); // Reset same players
             }
             case "RGNP" -> {
                 this.playedTiles = new ArrayList<>();
                 this.selectedTile = null;
                 view.showEnd();
-                view.resetGame();
+                view.resetGame(); // Reset new players
             }
             case "S" -> {
                 this.playedTiles = new ArrayList<>();

@@ -31,6 +31,21 @@ public class ScrabbleModel {
     }
 
     /**
+     * Constructor for ScrabbleModel with now view for test cases.
+     * Initializes the board, bag, players list, and loads valid words from a file.
+     */
+    public ScrabbleModel() {
+        board = new Board();
+        bag = new Bag();
+        players = new ArrayList<>();
+        this.view = null;
+        wordSet = new HashSet<>();
+        this.loadWordsFromFile();
+        firstMove = true;
+        currentPlayerIndex = 0;
+    }
+
+    /**
      * Loads valid words from a file into a HashSet for fast lookup.
      * The words are expected to be in "src/scrabble.txt".
      */
@@ -304,7 +319,9 @@ public class ScrabbleModel {
      */
     public void skip(){
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
-        view.updateView();
+        if (view != null) {
+            view.updateView();
+        }
     }
 
     /**
@@ -335,7 +352,9 @@ public class ScrabbleModel {
      * Resets the game by reinitializing the board, bag, and players.
      */
     public void resetGame() {
-        this.view.showEnd();
+        if (view != null) {
+            this.view.showEnd();
+        }
         bag = new Bag();
         firstMove = true;
 
@@ -346,7 +365,9 @@ public class ScrabbleModel {
         }
         players = holder;
         board = new Board();
-        view.updateView();
+        if (view != null) {
+            view.updateView();
+        }
     }
 
 }

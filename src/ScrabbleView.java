@@ -104,7 +104,7 @@ public class ScrabbleView extends JFrame {
         helpItem.setActionCommand("HELP");
         helpItem.addActionListener(sc); // Help action
 
-        resetGameSPItem.setActionCommand("RGSP");
+        resetGameSPItem.setActionCommand("1RGSP");
         resetGameSPItem.addActionListener(sc); // Restart game with same players actionListener
 
         resetGameItem.setActionCommand("RGNP");

@@ -1,4 +1,5 @@
-
+import javax.swing.plaf.synth.SynthTextAreaUI;
+import java.util.*;
 public class Tile {
     private final char tileChar;
 
@@ -33,6 +34,7 @@ public class Tile {
             return 10;
         }
         else {
+            System.out.println(tile);
             throw new IllegalArgumentException("That is not a valid tile");
         }
     }

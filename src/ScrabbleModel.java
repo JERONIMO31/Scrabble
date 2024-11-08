@@ -31,12 +31,12 @@ public class ScrabbleModel {
     }
 
     /**
-     * Constructor for ScrabbleModel with now view for test cases.
+     * Constructor for ScrabbleModel with no view for test cases.
      * Initializes the board, bag, players list, and loads valid words from a file.
      */
     public ScrabbleModel() {
         board = new Board();
-        bag = new Bag();
+        bag = new Bag(0);
         players = new ArrayList<>();
         this.view = null;
         wordSet = new HashSet<>();
@@ -80,6 +80,15 @@ public class ScrabbleModel {
      */
     public void addPlayer(String name) {
         players.add(new Player(name, bag));
+    }
+
+
+    /**
+     *
+     */
+    public int Updatescoretest(List<String> list , String word){
+        updatePlayerScore(list,word);
+        return getCurrentPlayer().getScore();
     }
 
     /**

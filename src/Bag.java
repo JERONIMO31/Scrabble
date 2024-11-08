@@ -11,6 +11,17 @@ public class Bag {
         this.initializeTiles();
         Collections.shuffle(tiles);
     }
+    public Bag(int a){
+        tiles = new ArrayList<>();
+        this.initializeTiles();
+        tiles.add(new Tile('h'));
+        tiles.add(new Tile('e'));
+        tiles.add(new Tile('l'));
+        tiles.add(new Tile('l'));
+        tiles.add(new Tile('o'));
+        tiles.add(new Tile('b'));
+        tiles.add(new Tile('t'));
+    }
 
     private void initializeTiles() {
         this.addTiles('A', 9);

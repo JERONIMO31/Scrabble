@@ -107,4 +107,14 @@ public class Player {
     public int handSize() {
         return this.hand.size();
     }
+
+    public void SethandTest(){
+        hand.add(new Tile('h'));
+        hand.add(new Tile('e'));
+        hand.add(new Tile('l'));
+        hand.add(new Tile('l'));
+        hand.add(new Tile('o'));
+        hand.add(new Tile('b'));
+        hand.add(new Tile('t'));
+    }
 }

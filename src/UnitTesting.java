@@ -214,9 +214,12 @@ public class UnitTesting {
         result = model.makeMove(6, 6, direction, word);
         assertFalse("The move should be not successful", result);
 
-        setPlayerTiles('L', 'W'); //add connecting word
+        direction = 'D'; //add connecting word that dosent work Vertical
+        result = model.makeMove(6, 6, direction, word);
+        assertFalse("The move should be not successful", result);
+
+        setPlayerTiles('L', 'W'); //add connecting word downward
         word = "low";
-        direction = 'D';
         result = model.makeMove(11, 6, direction, word);
         assertTrue("The move should be successful", result);
 
@@ -228,6 +231,20 @@ public class UnitTesting {
         Tile tileAt118 = model.getBoard().getTile(11, 8);
         assertNotNull("Tile at (11,7) should not be null after move.", tileAt118);
         assertEquals("Tile at (11,7) should be 'W'", 'W', tileAt118.getTileChar());
+
+        setPlayerTiles('L', 'W'); //add connecting word horizontal this time
+        word = "low";
+        direction = 'R';
+        result = model.makeMove(6, 11, direction, word);
+        assertTrue("The move should be successful", result);
+
+        Tile tileAt611 = model.getBoard().getTile(6, 11);
+        assertNotNull("Tile at (11,7) should not be null after move.", tileAt611);
+        assertEquals("Tile at (11,7) should be 'L'", 'L', tileAt611.getTileChar());
+
+        Tile tileAt811 = model.getBoard().getTile(8, 11);
+        assertNotNull("Tile at (11,7) should not be null after move.", tileAt811);
+        assertEquals("Tile at (11,7) should be 'W'", 'W', tileAt811.getTileChar());
 
     }
 

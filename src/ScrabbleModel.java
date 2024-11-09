@@ -100,7 +100,7 @@ public class ScrabbleModel {
      * @param word the word to be placed.
      * @return true if the word can be placed, false otherwise.
      */
-    private boolean isPossible(int x, int y, char direction, String word) {
+    public boolean isPossible(int x, int y, char direction, String word) {
         HashMap<Character, Integer> charMap = new HashMap<>();
         int xIndex;
         int yIndex;
@@ -172,7 +172,7 @@ public class ScrabbleModel {
      * @param word the word to be placed.
      * @return true if the word can be placed, false otherwise.
      */
-    private boolean isValid(int x, int y, char direction, String word) {
+    public boolean isValid(int x, int y, char direction, String word) {
         // Check if the word can be placed
         if (!isPossible(x, y, direction, word)) {
             return false;
@@ -319,7 +319,8 @@ public class ScrabbleModel {
         // Update the player's score and switch to the next player
         updatePlayerScore(getEffectedWords(x, y, direction, word), word);
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
-        view.updateView();
+        if (view != null) {
+            view.updateView();}
         return true;
     }
 

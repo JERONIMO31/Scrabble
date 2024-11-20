@@ -378,6 +378,7 @@ public class ScrabbleView extends JFrame {
     }
 
     public void setSpecialTiles(JButton button, int x, int y) {
+        button.setText(" ");
         // Set up imageIcons for special tiles
         if (Board.getMultiplier(x, y).equals("normal")) {
             if (x == 7 && y == 7) {

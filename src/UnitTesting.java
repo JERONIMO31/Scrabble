@@ -20,14 +20,25 @@ public class UnitTesting {
         game = new ScrabbleModel();
         game.addPlayer("A");
         game.addPlayer("B");
-        game.getCurrentPlayer().setHandTest();
+        game.getCurrentPlayer().setHandTest("hello");
         game.makeMove(7, 7, 'R', makeWord("hello"));
         game.skip(); // Ensures correct player
-        assertEquals("Player score should be 8 after playing 'hello'",8, game.getCurrentPlayer().getScore());
-        game.skip();
-        game.getCurrentPlayer().setHandTest();
-        game.makeMove(7, 7, 'D', makeWord("hello"));
         assertEquals("Player score should be 9 after playing 'hello'",9, game.getCurrentPlayer().getScore());
+        game.skip();
+        game.getCurrentPlayer().setHandTest("help");
+        game.makeMove(7, 7, 'D', makeWord("help"));
+        game.skip();
+        assertEquals("Player score should be 9 after playing 'help'",9, game.getCurrentPlayer().getScore());
+        game.skip();
+        game.getCurrentPlayer().setHandTest("peer");
+        game.makeMove(7, 10, 'R', makeWord("peer"));
+        game.skip();
+        assertEquals("Player score should be 21 after playing 'peer'",21, game.getCurrentPlayer().getScore());
+        game.skip();
+        game.getCurrentPlayer().setHandTest("owns");
+        game.makeMove(11, 7, 'D', makeWord("owns"));
+        game.skip();
+        assertEquals("Player score should be 23 after playing 'owns'",23, game.getCurrentPlayer().getScore());
         game.skip();
     }
 

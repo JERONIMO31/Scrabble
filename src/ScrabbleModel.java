@@ -261,7 +261,8 @@ public class ScrabbleModel {
         for (Tile c : word) {
             score += Tile.getTileScore(c);
         }
-        getCurrentPlayer().updateScore(score*multiplier);
+        if (word.size() > 1){
+        getCurrentPlayer().updateScore(score*multiplier);}
     }
 
     private void updatePlayerScore(int score){
@@ -306,7 +307,7 @@ public class ScrabbleModel {
                 board.addLetter(xIndex, yIndex, tile);
                 getCurrentPlayer().refillHand();
                 String m = board.getMultiplier(xIndex, yIndex);
-                if (m != null){
+                if (!m.equals("normal")){
                     switch (m){
                         case "DL" -> {
                             wordScore += 2 * Tile.getTileScore(tile);
@@ -331,6 +332,8 @@ public class ScrabbleModel {
                     wordScore += Tile.getTileScore(tile);
                     scoreWord(getWord(xIndex, yIndex, oppositeDirection, tile), 1, 0);
                 }
+            } else {
+                wordScore += Tile.getTileScore(board.getTile(xIndex, yIndex));
             }
         }
 

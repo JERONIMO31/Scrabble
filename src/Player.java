@@ -108,13 +108,9 @@ public class Player {
         return this.hand.size();
     }
 
-    public void setHandTest(){
-        hand.add(new Tile('h'));
-        hand.add(new Tile('e'));
-        hand.add(new Tile('l'));
-        hand.add(new Tile('l'));
-        hand.add(new Tile('o'));
-        hand.add(new Tile('b'));
-        hand.add(new Tile('t'));
+    public void setHandTest(String word){
+        for (char c : word.toCharArray()){
+            hand.add(new Tile(c));
+        }
     }
 }

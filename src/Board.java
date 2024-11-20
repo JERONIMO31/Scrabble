@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public class Board {
     private Tile[][] board;
-    private final String[][] multipliers;
+    private static String[][] multipliers;
 
     /**
      * Constructor for the Board class.
@@ -136,10 +136,14 @@ public class Board {
         multipliers[14][14] = "TW";
     }
 
-    public String getMultiplier(int x, int y){
+    public static String getMultiplier(int x, int y){
         if (x <= 14 && x >= 0 && y <= 14 && y >= 0) {
-            return multipliers[x][y];
+            String multiplier = multipliers[x][y];
+            if (multiplier == null) {
+                return "normal";
+            }
+            return multiplier;
         }
-        else {return null;}
+        else {return "normal";}
     }
 }

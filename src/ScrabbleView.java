@@ -43,15 +43,18 @@ public class ScrabbleView extends JFrame {
                 boardCells[i][j] = boardCell;
                 boardCells[i][j].setBorder(BorderFactory.createLineBorder(Color.black)); // Set black borders
 
-                ImageIcon boardIcon = new ImageIcon(getClass().getResource("/regularBoardTile.png"));
+                ImageIcon boardIcon = new ImageIcon("src/regularBoardTile.png");
+                boardCells[i][j].setText("");
+                boardCells[i][j].setHorizontalTextPosition(SwingConstants.CENTER);
+                boardCells[i][j].setVerticalTextPosition(SwingConstants.CENTER);
                 boardCells[i][j].setIcon(boardIcon); // Set the image as the icon
+                // Set up imageIcons for special tiles
+                this.setSpecialTiles(boardCells[i][j], i, j);
 
                 mouseListener(boardCells[i][j], null, null, 2); // Set hover border to red
                 boardPanel.add(boardCell);
             }
         }
-        // Set up imageIcons for special tiles
-        this.setSpecialTiles();
 
         // Initialize panel for the players name, hand, and play/skip buttons
         JPanel playerHandPanel = new JPanel(new FlowLayout());
@@ -172,12 +175,14 @@ public class ScrabbleView extends JFrame {
         for (int i = 0; i < 15; i++) {
             for (int j = 0; j < 15; j++) {
                 if (board.isEmpty(i, j)) {
-                    boardCells[i][j].setText(" ");
                     boardCells[i][j].setEnabled(true);
+                    this.setSpecialTiles(boardCells[i][j], i, j);
                     mouseListener(boardCells[i][j], null, null, 2); // Set border to red
                 }
                 else {
-                    boardCells[i][j].setText(String.valueOf(board.getTile(i, j).getTileChar()));
+                    char letter = board.getTile(i, j).getTileChar();
+                    String path = "src/tile" + Character.toUpperCase(letter) + ".png";
+                    boardCells[i][j].setIcon(new ImageIcon(path));
                     boardCells[i][j].setEnabled(false);
                     mouseListener(boardCells[i][j], null, null, 3); // Set border to black
                 }
@@ -186,7 +191,6 @@ public class ScrabbleView extends JFrame {
 
         // Restore the current players hand
         for (int i = 0; i < model.getCurrentPlayer().getHand().size(); i++) {
-            handTiles[i].setText(String.valueOf(model.getCurrentPlayer().getHand().get(i).getTileChar()));
             handTiles[i].setEnabled(true);
             mouseListener(handTiles[i], null, null, 1); // Set border to pink
         }
@@ -368,93 +372,51 @@ public class ScrabbleView extends JFrame {
         this.updateView();
     }
 
-    public void setSpecialTiles() {
+    public void setSpecialTiles(JButton button, int x, int y) {
         // Set up imageIcons for special tiles
-        ImageIcon centerIcon = new ImageIcon(getClass().getResource("/centerTile.png"));
-        boardCells[7][7].setIcon(centerIcon); // Highlight center tile for first move requirement
+        if (x == 7 && y == 7) {
+            ImageIcon centerIcon = new ImageIcon("src/centerTile.png");
+            boardCells[7][7].setIcon(centerIcon); // Highlight center tile for first move requirement
 
-        ImageIcon dLSIcon = new ImageIcon(getClass().getResource("/doubleLetterScore.png"));
-        boardCells[3][0].setIcon(dLSIcon);
-        boardCells[11][0].setIcon(dLSIcon);
-        boardCells[6][2].setIcon(dLSIcon);
-        boardCells[8][2].setIcon(dLSIcon);
-        boardCells[0][3].setIcon(dLSIcon);
-        boardCells[7][3].setIcon(dLSIcon);
-        boardCells[14][3].setIcon(dLSIcon);
-        boardCells[2][6].setIcon(dLSIcon);
-        boardCells[6][6].setIcon(dLSIcon);
-        boardCells[8][6].setIcon(dLSIcon);
-        boardCells[12][6].setIcon(dLSIcon);
-        boardCells[3][7].setIcon(dLSIcon);
-        boardCells[11][7].setIcon(dLSIcon);
-        boardCells[2][8].setIcon(dLSIcon);
-        boardCells[6][8].setIcon(dLSIcon);
-        boardCells[8][8].setIcon(dLSIcon);
-        boardCells[12][8].setIcon(dLSIcon);
-        boardCells[0][11].setIcon(dLSIcon);
-        boardCells[7][11].setIcon(dLSIcon);
-        boardCells[14][11].setIcon(dLSIcon);
-        boardCells[6][12].setIcon(dLSIcon);
-        boardCells[8][12].setIcon(dLSIcon);
-        boardCells[3][14].setIcon(dLSIcon);
-        boardCells[11][14].setIcon(dLSIcon);
-
-        ImageIcon tLSIcon = new ImageIcon(getClass().getResource("/tripleLetterScore.png"));
-        boardCells[5][1].setIcon(tLSIcon);
-        boardCells[9][1].setIcon(tLSIcon);
-        boardCells[1][5].setIcon(tLSIcon);
-        boardCells[5][5].setIcon(tLSIcon);
-        boardCells[9][5].setIcon(tLSIcon);
-        boardCells[13][5].setIcon(tLSIcon);
-        boardCells[1][9].setIcon(tLSIcon);
-        boardCells[5][9].setIcon(tLSIcon);
-        boardCells[9][9].setIcon(tLSIcon);
-        boardCells[13][9].setIcon(tLSIcon);
-        boardCells[5][13].setIcon(tLSIcon);
-        boardCells[9][13].setIcon(tLSIcon);
-
-        ImageIcon dWSIcon = new ImageIcon(getClass().getResource("/doubleWordScore.png"));
-        boardCells[1][1].setIcon(dWSIcon);
-        boardCells[13][1].setIcon(dWSIcon);
-        boardCells[2][2].setIcon(dWSIcon);
-        boardCells[12][2].setIcon(dWSIcon);
-        boardCells[3][3].setIcon(dWSIcon);
-        boardCells[11][3].setIcon(dWSIcon);
-        boardCells[4][4].setIcon(dWSIcon);
-        boardCells[10][4].setIcon(dWSIcon);
-        boardCells[4][10].setIcon(dWSIcon);
-        boardCells[10][10].setIcon(dWSIcon);
-        boardCells[3][11].setIcon(dWSIcon);
-        boardCells[11][11].setIcon(dWSIcon);
-        boardCells[2][12].setIcon(dWSIcon);
-        boardCells[12][12].setIcon(dWSIcon);
-        boardCells[1][13].setIcon(dWSIcon);
-        boardCells[13][13].setIcon(dWSIcon);
-
-        ImageIcon tWSIcon = new ImageIcon(getClass().getResource("/tripleWordScore.png"));
-        boardCells[0][0].setIcon(tWSIcon);
-        boardCells[7][0].setIcon(tWSIcon);
-        boardCells[14][0].setIcon(tWSIcon);
-        boardCells[0][7].setIcon(tWSIcon);
-        boardCells[14][7].setIcon(tWSIcon);
-        boardCells[0][14].setIcon(tWSIcon);
-        boardCells[7][14].setIcon(tWSIcon);
-        boardCells[14][14].setIcon(tWSIcon);
+        }
+        if (Board.getMultiplier(x, y).equals("DL")) {
+            ImageIcon dLSIcon = new ImageIcon("src/doubleLetterScore.png");
+            button.setIcon(dLSIcon);
+        }
+        if (Board.getMultiplier(x, y).equals("TL")) {
+            ImageIcon tLSIcon = new ImageIcon("src/tripleLetterScore.png");
+            button.setIcon(tLSIcon);
+        }
+        if (Board.getMultiplier(x, y).equals("DW")) {
+            ImageIcon tLSIcon = new ImageIcon("src/doubleWordScore.png");
+            button.setIcon(tLSIcon);
+        }
+        if (Board.getMultiplier(x, y).equals("TW")) {
+            ImageIcon tLSIcon = new ImageIcon("src/tripleWordScore.png");
+            button.setIcon(tLSIcon);
+        }
     }
 
     public void setHandTiles() {
         List<Tile> hand = model.getCurrentPlayer().getHand();
         for (int i = 0; i < model.getCurrentPlayer().getHand().size(); i++) {
-            char letter = hand.get(i).getTileChar();
-            String path = "src/tile" + Character.toUpperCase(letter) + ".png";
-            ImageIcon Icon = new ImageIcon(path);
-            handTiles[i].setIcon(Icon);
+            if (!hand.get(i).isBlank()) {
+                char letter = hand.get(i).getTileChar();
+                String path = "src/tile" + Character.toUpperCase(letter) + ".png";
+                ImageIcon Icon = new ImageIcon(path);
+                handTiles[i].setIcon(Icon);
+            }
+            else {
+                ImageIcon Icon = new ImageIcon("src/tileBlank.png");
+                handTiles[i].setIcon(Icon);
+            }
+            handTiles[i].setText("");
+            handTiles[i].setHorizontalTextPosition(SwingConstants.CENTER);
+            handTiles[i].setVerticalTextPosition(SwingConstants.CENTER);
         }
-
     }
 
     public static void main(String[] args) {
         new ScrabbleView();
     }
-
 }

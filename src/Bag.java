@@ -24,32 +24,33 @@ public class Bag {
     }
 
     private void initializeTiles() {
-        this.addTiles('A', 9);
-        this.addTiles('B', 2);
-        this.addTiles('C', 2);
-        this.addTiles('D', 4);
-        this.addTiles('E', 12);
-        this.addTiles('F', 2);
-        this.addTiles('G', 3);
-        this.addTiles('H', 2);
-        this.addTiles('I', 9);
-        this.addTiles('J', 1);
-        this.addTiles('K', 1);
-        this.addTiles('L', 4);
-        this.addTiles('M', 2);
-        this.addTiles('N', 6);
-        this.addTiles('O', 8);
-        this.addTiles('P', 2);
-        this.addTiles('Q', 1);
-        this.addTiles('R', 6);
-        this.addTiles('S', 4);
-        this.addTiles('T', 6);
-        this.addTiles('U', 4);
-        this.addTiles('V', 2);
-        this.addTiles('W', 2);
-        this.addTiles('X', 1);
-        this.addTiles('Y', 2);
-        this.addTiles('Z', 1);
+        this.addTiles('a', 9);
+        this.addTiles('b', 2);
+        this.addTiles('c', 2);
+        this.addTiles('d', 4);
+        this.addTiles('e', 12);
+        this.addTiles('f', 2);
+        this.addTiles('g', 3);
+        this.addTiles('h', 2);
+        this.addTiles('i', 9);
+        this.addTiles('j', 1);
+        this.addTiles('k', 1);
+        this.addTiles('l', 4);
+        this.addTiles('m', 2);
+        this.addTiles('n', 6);
+        this.addTiles('o', 8);
+        this.addTiles('p', 2);
+        this.addTiles('q', 1);
+        this.addTiles('r', 6);
+        this.addTiles('s', 4);
+        this.addTiles('t', 6);
+        this.addTiles('u', 4);
+        this.addTiles('v', 2);
+        this.addTiles('w', 2);
+        this.addTiles('x', 1);
+        this.addTiles('y', 2);
+        this.addTiles('z', 1);
+        this.addTiles(' ', 100);
     }
 
     private void addTiles(char letter, int count) {

@@ -1,10 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class ScrabbleModel {
     private static List<Player> players;
@@ -70,8 +66,12 @@ public class ScrabbleModel {
      * @param word the word to be checked.
      * @return true if the word exists, false otherwise.
      */
-    public boolean isWord(String word) {
-        return wordSet.contains(word.toLowerCase());
+    public boolean isWord(List<Tile> word) {
+        StringBuilder stringWord = new StringBuilder();
+        for (Tile tile : word){
+            stringWord.append(tile.getTileChar());
+        }
+        return wordSet.contains(stringWord.toString().toLowerCase());
     }
 
     /**
@@ -86,7 +86,7 @@ public class ScrabbleModel {
     /**
      *
      */
-    public int Updatescoretest(List<String> list , String word){
+    public int Updatescoretest(List<List<Tile>> list , List<Tile> word){
         updatePlayerScore(list,word);
         return getCurrentPlayer().getScore();
     }
@@ -100,7 +100,7 @@ public class ScrabbleModel {
      * @param word the word to be placed.
      * @return true if the word can be placed, false otherwise.
      */
-    public boolean isPossible(int x, int y, char direction, String word) {
+    public boolean isPossible(int x, int y, char direction, List<Tile> word) {
         HashMap<Character, Integer> charMap = new HashMap<>();
         int xIndex;
         int yIndex;
@@ -113,8 +113,8 @@ public class ScrabbleModel {
         boolean isTouching = false; // Used to ensure that at least one tile is touching the existing placed tiles
 
         // Iterate over the characters in the word and check the placement on the board
-        for (int i = 0; i < word.length(); i++) {
-            char c = word.charAt(i);
+        for (int i = 0; i < word.size(); i++) {
+            Tile c = word.get(i);
             if (direction == 'D') { // Moving down
                 yIndex = y + i;
                 xIndex = x;
@@ -124,7 +124,7 @@ public class ScrabbleModel {
             }
             if (board.isEmpty(xIndex, yIndex)) {
                 // Count the occurrences of each character that need to be placed
-                charMap.put(c, charMap.getOrDefault(c, 0) + 1);
+                charMap.put(c.getTileChar(), charMap.getOrDefault(c.getTileChar(), 0) + 1);
 
                 if (!board.isEmpty(xIndex + 1, yIndex) || !board.isEmpty(xIndex - 1, yIndex) ||
                         !board.isEmpty(xIndex, yIndex + 1)  || !board.isEmpty(xIndex, yIndex - 1) ){
@@ -148,7 +148,7 @@ public class ScrabbleModel {
         if (firstMove) {
             xIndex = x;
             yIndex = y;
-            for (int i = 0; i < word.length(); i++) {
+            for (int i = 0; i < word.size(); i++) {
                 if (direction == 'D') {
                     yIndex = y + i;
                 } else {
@@ -172,15 +172,15 @@ public class ScrabbleModel {
      * @param word the word to be placed.
      * @return true if the word can be placed, false otherwise.
      */
-    public boolean isValid(int x, int y, char direction, String word) {
+    public boolean isValid(int x, int y, char direction, List<Tile> word) {
         // Check if the word can be placed
         if (!isPossible(x, y, direction, word)) {
             return false;
         }
 
         // Validate all affected words on the board
-        List<String> effectedWords = getEffectedWords(x, y, direction, word);
-        for (String effectedWord : effectedWords) {
+        List<List<Tile>> effectedWords = getEffectedWords(x, y, direction, word);
+        for (List<Tile> effectedWord : effectedWords) {
             if (!isWord(effectedWord)) {
                 return false;
             }
@@ -196,14 +196,14 @@ public class ScrabbleModel {
      * @param word the word being placed.
      * @return a list of affected words.
      */
-    private List<String> getEffectedWords(int x, int y, char direction, String word) {
+    private List<List<Tile>> getEffectedWords(int x, int y, char direction, List<Tile> word) {
         int xIndex;
         int yIndex;
-        List<String> wordList = new ArrayList<>();
+        List<List<Tile>> wordList = new ArrayList<>();
 
         // For each character in the word, find new words formed by adjacent tiles
-        for (int i = 0; i < word.length(); i++) {
-            char c = word.charAt(i);
+        for (int i = 0; i < word.size(); i++) {
+            Tile c = word.get(i);
             if (direction == 'D') {
                 yIndex = y + i;
                 xIndex = x;
@@ -229,38 +229,40 @@ public class ScrabbleModel {
      * @param c the character being added to the board.
      * @return the complete word as a string.
      */
-    private String getWord(int x, int y, char direction, char c) {
+    private List<Tile> getWord(int x, int y, char direction, Tile c) {
         int xIndex;
         int yIndex;
-        StringBuilder word = new StringBuilder(String.valueOf(c));
+        List<Tile> word = new ArrayList<>();
+        word.add(c);
 
         // Search for adjacent tiles to complete the word in the specified direction
         if (direction == 'D') {
             yIndex = y + 1;
             xIndex = x;
             while (!board.isEmpty(xIndex, yIndex)) {
-                word.append(board.getTile(xIndex, yIndex).getTileChar());
+                word.add(board.getTile(xIndex, yIndex));
                 yIndex++;
             }
             yIndex = y - 1;
             while (!board.isEmpty(xIndex, yIndex)) {
-                word.insert(0, board.getTile(xIndex, yIndex).getTileChar());
+                word.addFirst(board.getTile(xIndex, yIndex));
                 yIndex--;
             }
         } else {
             yIndex = y;
             xIndex = x + 1;
             while (!board.isEmpty(xIndex, yIndex)) {
-                word.append(board.getTile(xIndex, yIndex).getTileChar());
+                word.add(board.getTile(xIndex, yIndex));
                 xIndex++;
             }
             xIndex = x - 1;
             while (!board.isEmpty(xIndex, yIndex)) {
-                word.insert(0, board.getTile(xIndex, yIndex).getTileChar());
+                word.addFirst(board.getTile(xIndex, yIndex));
                 xIndex--;
             }
         }
-        return word.toString();
+
+        return word;
     }
 
     /**
@@ -268,15 +270,15 @@ public class ScrabbleModel {
      * @param effectedWords the list of words formed or affected.
      * @param word the main word that was placed.
      */
-    private void updatePlayerScore(List<String> effectedWords, String word) {
+    private void updatePlayerScore(List<List<Tile>> effectedWords, List<Tile> word) {
         // Update score for each affected word
-        for (String effectedWord : effectedWords) {
-            for (char c : effectedWord.toCharArray()) {
+        for (List<Tile> effectedWord : effectedWords) {
+            for (Tile c : effectedWord) {
                 getCurrentPlayer().updateScore(c);
             }
         }
         // Update score for the main word
-        for (char c : word.toCharArray()) {
+        for (Tile c : word) {
             getCurrentPlayer().updateScore(c);
         }
     }
@@ -289,8 +291,7 @@ public class ScrabbleModel {
      * @param word the word to be placed.
      * @return true if the move is successful, false otherwise.
      */
-    public boolean makeMove(int x, int y, char direction, String word) {
-        word = word.toLowerCase();
+    public boolean makeMove(int x, int y, char direction, List<Tile> word) {
 
         int xIndex;
         int yIndex;
@@ -301,8 +302,8 @@ public class ScrabbleModel {
         }
 
         // Place the word on the board and update the player's hand
-        for (int i = 0; i < word.length(); i++) {
-            char c = word.charAt(i);
+        for (int i = 0; i < word.size(); i++) {
+            Tile c = word.get(i);
             if (direction == 'D') {
                 yIndex = y + i;
                 xIndex = x;

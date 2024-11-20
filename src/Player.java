@@ -54,7 +54,7 @@ public class Player {
      * @param c the character of the tile to remove
      * @return the Tile object that was removed, or null if not found
      */
-    public Tile popTile(char c) {
+    public Tile popTile(Tile c) {
         for (int i = 0; i < hand.size(); i++) {
             if (hand.get(i).equals(c)) {  // Look for the tile matching the input character
                 return hand.remove(i);  // Remove the tile and return it
@@ -68,7 +68,7 @@ public class Player {
      *
      * @param c the character of the tile played
      */
-    public void updateScore(char c) {
+    public void updateScore(Tile c) {
         myScore += Tile.getTileScore(c);  // Add the tile's score to the player's score
     }
 

@@ -1,40 +1,56 @@
 import javax.swing.plaf.synth.SynthTextAreaUI;
 import java.util.*;
 public class Tile {
-    private final char tileChar;
+    private char tileChar;
+    private boolean isBlank = false;
 
     public Tile(char tile) {
-        this.tileChar = Character.toUpperCase(tile);
+        this.tileChar = Character.toLowerCase(tile);
+        if (tile == ' '){
+            isBlank = true;
+        }
+    }
+
+    public void setTileChar(char tileChar){
+        this.tileChar = Character.toLowerCase(tileChar);
+    }
+
+    public boolean isBlank() {
+        return isBlank;
     }
 
     public char getTileChar() {
         return this.tileChar;
     }
 
-    public static int getTileScore(char tile) {
-        if (tile == 'a'||tile == 'e'||tile == 'i'||tile == 'o'||tile == 'u'||tile == 'l'||tile == 'n'||tile == 's'||tile == 't'||tile == 'r') {
+    public static int getTileScore(Tile tile) {
+        char c = tile.getTileChar();
+        if (tile.isBlank()){
+            return 0;
+        }
+        else if (c == 'a'||c == 'e'||c == 'i'||c == 'o'||c == 'u'||c == 'l'||c == 'n'||c == 's'||c == 't'||c == 'r') {
             return 1;
         }
-        else if (tile == 'd'||tile == 'g') {
+        else if (c == 'd'||c == 'g') {
             return 2;
         }
-        else if (tile == 'b'||tile == 'c'||tile == 'm'||tile == 'p') {
+        else if (c == 'b'||c == 'c'||c == 'm'||c == 'p') {
             return 3;
         }
-        else if (tile == 'f'||tile == 'h'||tile == 'v'||tile == 'w'||tile == 'y') {
+        else if (c == 'f'||c == 'h'||c == 'v'||c == 'w'||c == 'y') {
             return 4;
         }
-        else if (tile == 'k') {
+        else if (c == 'k') {
             return 5;
         }
-        else if (tile == 'j'||tile == 'x') {
+        else if (c == 'j'||c == 'x') {
             return 8;
         }
-        else if (tile == 'q'||tile == 'z') {
+        else if (c == 'q'||c == 'z') {
             return 10;
         }
         else {
-            System.out.println(tile);
+            System.out.println(c);
             throw new IllegalArgumentException("That is not a valid tile");
         }
     }
@@ -42,4 +58,8 @@ public class Tile {
     public boolean equals(char letter) {
         return Character.toUpperCase(letter) == Character.toUpperCase(this.tileChar);
     }
+    public boolean equals(Tile tile) {
+        return tileChar == tile.getTileChar() && isBlank == tile.isBlank();
+    }
+
 }

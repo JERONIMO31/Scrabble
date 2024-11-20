@@ -10,7 +10,7 @@ import javax.swing.*;
 class PlayedTile {
     public int x;         // x-coordinate on the board
     public int y;         // y-coordinate on the board
-    public char letter;   // character representing the tile letter
+    public Tile tile;   // character representing the tile letter
     public int handIndex; // index of the tile in the player's hand
 }
 
@@ -60,6 +60,7 @@ public class ScrabbleController implements ActionListener {
             case "P" -> handlePlayButton();
             case "HELP" -> view.showHelp();
             case "RGSP" -> {
+                System.out.println("reset");
                 this.playedTiles = new ArrayList<>();
                 this.selectedTile = null;
                 model.resetGame(); // Reset same players
@@ -110,7 +111,8 @@ public class ScrabbleController implements ActionListener {
 
         char direction;
 
-        StringBuilder word = new StringBuilder(String.valueOf(firstTile.letter));
+        List<Tile> word = new ArrayList<>();
+        word.add(firstTile.tile);
 
         Board board = model.getBoard();
 
@@ -142,18 +144,18 @@ public class ScrabbleController implements ActionListener {
             yIndex = firstTile.y + 1;
             xIndex = firstTile.x;
             while (!board.isEmpty(xIndex, yIndex) || getPlayedTileAtXY(xIndex, yIndex) != null) {
-                word.append(!board.isEmpty(xIndex, yIndex) ?
-                        board.getTile(xIndex, yIndex).getTileChar() :
-                        getPlayedTileAtXY(xIndex, yIndex).letter);
+                word.add(!board.isEmpty(xIndex, yIndex) ?
+                        board.getTile(xIndex, yIndex) :
+                        getPlayedTileAtXY(xIndex, yIndex).tile);
                 yIndex++;
             }
             xFinishIndex = xIndex;
             yFinishIndex = yIndex - 1;
             yIndex = firstTile.y - 1;
             while (!board.isEmpty(xIndex, yIndex) || getPlayedTileAtXY(xIndex, yIndex) != null) {
-                word.insert(0, !board.isEmpty(xIndex, yIndex) ?
-                        board.getTile(xIndex, yIndex).getTileChar() :
-                        getPlayedTileAtXY(xIndex, yIndex).letter);
+                word.addFirst(!board.isEmpty(xIndex, yIndex) ?
+                        board.getTile(xIndex, yIndex) :
+                        getPlayedTileAtXY(xIndex, yIndex).tile);
                 yIndex--;
             }
             xStartIndex = xIndex;
@@ -162,18 +164,18 @@ public class ScrabbleController implements ActionListener {
             yIndex = firstTile.y;
             xIndex = firstTile.x + 1;
             while (!board.isEmpty(xIndex, yIndex) || getPlayedTileAtXY(xIndex, yIndex) != null) {
-                word.append(!board.isEmpty(xIndex, yIndex) ?
-                        board.getTile(xIndex, yIndex).getTileChar() :
-                        getPlayedTileAtXY(xIndex, yIndex).letter);
+                word.add(!board.isEmpty(xIndex, yIndex) ?
+                        board.getTile(xIndex, yIndex) :
+                        getPlayedTileAtXY(xIndex, yIndex).tile);
                 xIndex++;
             }
             xFinishIndex = xIndex - 1;
             yFinishIndex = yIndex;
             xIndex = firstTile.x - 1;
             while (!board.isEmpty(xIndex, yIndex) || getPlayedTileAtXY(xIndex, yIndex) != null) {
-                word.insert(0, !board.isEmpty(xIndex, yIndex) ?
-                        board.getTile(xIndex, yIndex).getTileChar() :
-                        getPlayedTileAtXY(xIndex, yIndex).letter);
+                word.addFirst(!board.isEmpty(xIndex, yIndex) ?
+                        board.getTile(xIndex, yIndex) :
+                        getPlayedTileAtXY(xIndex, yIndex).tile);
                 xIndex--;
             }
             xStartIndex = xIndex + 1;
@@ -190,7 +192,7 @@ public class ScrabbleController implements ActionListener {
         }
 
         // Make the move on the model, handle illegal move if unsuccessful
-        if (!model.makeMove(xStartIndex, yStartIndex, direction, word.toString())) {
+        if (!model.makeMove(xStartIndex, yStartIndex, direction, word)) {
             handleIllegalMove();
         }
         this.playedTiles = new ArrayList<>();
@@ -219,8 +221,27 @@ public class ScrabbleController implements ActionListener {
             if (tile != null) {
                 view.removeTempTile(x, y, tile.handIndex);
                 playedTiles.remove(tile);
+                if (tile.tile.isBlank()){
+                    tile.tile.setTileChar(' ');
+                }
             }
-            view.addTempTile(selectedTile.letter, x, y, selectedTile.handIndex);
+            if (selectedTile.tile.isBlank()){
+                String input = JOptionPane.showInputDialog(view.getFrame(), "Input desired char!");
+                while (true) {
+                    if (input == null){
+                        return;
+                    }
+                    if (input.length() == 1){
+                        char c = input.charAt(0);
+                        if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')){
+                            selectedTile.tile.setTileChar(Character.toLowerCase(c));
+                            break;
+                        }
+                    }
+                    input = JOptionPane.showInputDialog(view.getFrame(), "Invalid input, try again!\nInput desired char!");
+                }
+            }
+            view.addTempTile(selectedTile.tile.getTileChar(), x, y, selectedTile.handIndex);
             selectedTile.x = x;
             selectedTile.y = y;
             playedTiles.add(selectedTile);
@@ -242,7 +263,7 @@ public class ScrabbleController implements ActionListener {
         }
         selectedTile = new PlayedTile();
         selectedTile.handIndex = index;
-        selectedTile.letter = model.getCurrentPlayer().getHand().get(index).getTileChar();
+        selectedTile.tile = model.getCurrentPlayer().getHand().get(index);
     }
 
     /**

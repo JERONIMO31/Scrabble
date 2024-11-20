@@ -82,15 +82,6 @@ public class ScrabbleModel {
         players.add(new Player(name, bag));
     }
 
-
-    /**
-     *
-     */
-    public int Updatescoretest(List<List<Tile>> list , List<Tile> word){
-        updatePlayerScore(list,word);
-        return getCurrentPlayer().getScore();
-    }
-
     /**
      * Checks if a word can be placed on the board at the specified coordinates
      * in the given direction without violating any game rules.
@@ -265,22 +256,16 @@ public class ScrabbleModel {
         return word;
     }
 
-    /**
-     * Updates the current player's score based on the words they have formed.
-     * @param effectedWords the list of words formed or affected.
-     * @param word the main word that was placed.
-     */
-    private void updatePlayerScore(List<List<Tile>> effectedWords, List<Tile> word) {
-        // Update score for each affected word
-        for (List<Tile> effectedWord : effectedWords) {
-            for (Tile c : effectedWord) {
-                getCurrentPlayer().updateScore(c);
-            }
-        }
-        // Update score for the main word
+    private void scoreWord(List<Tile> word, int multiplier, int additionalScore) {
+        int score = additionalScore;
         for (Tile c : word) {
-            getCurrentPlayer().updateScore(c);
+            score += Tile.getTileScore(c);
         }
+        getCurrentPlayer().updateScore(score*multiplier);
+    }
+
+    private void updatePlayerScore(int score){
+        getCurrentPlayer().updateScore(score);
     }
 
     /**
@@ -295,6 +280,11 @@ public class ScrabbleModel {
 
         int xIndex;
         int yIndex;
+
+        char oppositeDirection = direction == 'D' ? 'R': 'D';
+
+        int multiplier = 1;
+        int wordScore = 0;
 
         // Check if the move is valid
         if (!isValid(x, y, direction, word)) {
@@ -312,13 +302,41 @@ public class ScrabbleModel {
                 xIndex = x + i;
             }
             if (board.isEmpty(xIndex, yIndex)) {
-                board.addLetter(xIndex, yIndex, getCurrentPlayer().popTile(c));
+                Tile tile = getCurrentPlayer().popTile(c);
+                board.addLetter(xIndex, yIndex, tile);
                 getCurrentPlayer().refillHand();
+                String m = board.getMultiplier(xIndex, yIndex);
+                if (m != null){
+                    switch (m){
+                        case "DL" -> {
+                            wordScore += 2 * Tile.getTileScore(tile);
+                            scoreWord(getWord(xIndex, yIndex, oppositeDirection, tile), 1, Tile.getTileScore(tile));
+                        }
+                        case "TL" -> {
+                            wordScore += 3 * Tile.getTileScore(tile);
+                            scoreWord(getWord(xIndex, yIndex, oppositeDirection, tile), 1, 2 * Tile.getTileScore(tile));
+                        }
+                        case "DW" -> {
+                            multiplier = multiplier * 2;
+                            wordScore += Tile.getTileScore(tile);
+                            scoreWord(getWord(xIndex, yIndex, oppositeDirection, tile), 2, 0);
+                        }
+                        case "TW" -> {
+                            multiplier = multiplier * 3;
+                            wordScore += Tile.getTileScore(tile);
+                            scoreWord(getWord(xIndex, yIndex, oppositeDirection, tile), 3, 0);
+                        }
+                    }
+                } else {
+                    wordScore += Tile.getTileScore(tile);
+                    scoreWord(getWord(xIndex, yIndex, oppositeDirection, tile), 1, 0);
+                }
             }
         }
 
         // Update the player's score and switch to the next player
-        updatePlayerScore(getEffectedWords(x, y, direction, word), word);
+
+        updatePlayerScore(wordScore*multiplier);
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
         if (view != null) {
             view.updateView();}

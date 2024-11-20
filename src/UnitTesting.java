@@ -9,7 +9,7 @@ import static org.junit.Assert.*;
 
 public class UnitTesting {
     private static ScrabbleModel game;
-    private List<List<Tile>> Affectedwords;
+    private List<List<Tile>> affectedWords;
     private ScrabbleModel model;
 
     /**
@@ -20,23 +20,15 @@ public class UnitTesting {
         game = new ScrabbleModel();
         game.addPlayer("A");
         game.addPlayer("B");
-        game.getCurrentPlayer().SethandTest();
+        game.getCurrentPlayer().setHandTest();
+        game.makeMove(7, 7, 'R', makeWord("hello"));
+        game.skip(); // Ensures correct player
+        assertEquals("Player score should be 8 after playing 'hello'",8, game.getCurrentPlayer().getScore());
         game.skip();
-        game.getCurrentPlayer().SethandTest();
+        game.getCurrentPlayer().setHandTest();
+        game.makeMove(7, 7, 'D', makeWord("hello"));
+        assertEquals("Player score should be 9 after playing 'hello'",9, game.getCurrentPlayer().getScore());
         game.skip();
-        Affectedwords = new ArrayList<>();
-        Assertions.assertEquals(8, game.Updatescoretest(Affectedwords,makeWord("hello")));
-        Affectedwords.add(makeWord("hello"));
-        game.skip();
-        Assertions.assertEquals(12,game.Updatescoretest(Affectedwords,makeWord("be")));
-        game.skip();
-        Affectedwords = new ArrayList<>();
-        Assertions.assertEquals(21,game.Updatescoretest(Affectedwords,makeWord("aboriginal")));
-        game.skip();
-        Assertions.assertEquals(13,game.Updatescoretest(Affectedwords,makeWord("a")));
-        game.skip();
-        Assertions.assertEquals(33,game.Updatescoretest(Affectedwords,makeWord("zus")));
-
     }
 
     private List<Tile> makeWord(String word){

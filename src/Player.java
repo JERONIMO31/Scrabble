@@ -66,10 +66,10 @@ public class Player {
     /**
      * Updates the player's score based on the tile character
      *
-     * @param c the character of the tile played
+     * @param score score to add
      */
-    public void updateScore(Tile c) {
-        myScore += Tile.getTileScore(c);  // Add the tile's score to the player's score
+    public void updateScore(int score) {
+        myScore += score;  // Add the tile's score to the player's score
     }
 
     /**
@@ -108,7 +108,7 @@ public class Player {
         return this.hand.size();
     }
 
-    public void SethandTest(){
+    public void setHandTest(){
         hand.add(new Tile('h'));
         hand.add(new Tile('e'));
         hand.add(new Tile('l'));

@@ -43,13 +43,10 @@ public class ScrabbleView extends JFrame {
                 boardCells[i][j] = boardCell;
                 boardCells[i][j].setBorder(BorderFactory.createLineBorder(Color.black)); // Set black borders
 
-                ImageIcon boardIcon = new ImageIcon("src/regularBoardTile.png");
-                boardCells[i][j].setText("");
+                //ImageIcon boardIcon = new ImageIcon("src/images/regularBoardTile.png");
                 boardCells[i][j].setHorizontalTextPosition(SwingConstants.CENTER);
                 boardCells[i][j].setVerticalTextPosition(SwingConstants.CENTER);
-                boardCells[i][j].setIcon(boardIcon); // Set the image as the icon
-                // Set up imageIcons for special tiles
-                this.setSpecialTiles(boardCells[i][j], i, j);
+                //boardCells[i][j].setIcon(boardIcon); // Set the image as the icon
 
                 mouseListener(boardCells[i][j], null, null, 2); // Set hover border to red
                 boardPanel.add(boardCell);
@@ -113,7 +110,7 @@ public class ScrabbleView extends JFrame {
         helpItem.setActionCommand("HELP");
         helpItem.addActionListener(sc); // Help action
 
-        resetGameSPItem.setActionCommand("1RGSP");
+        resetGameSPItem.setActionCommand("RGSP");
         resetGameSPItem.addActionListener(sc); // Restart game with same players actionListener
 
         resetGameItem.setActionCommand("RGNP");
@@ -180,8 +177,9 @@ public class ScrabbleView extends JFrame {
                     mouseListener(boardCells[i][j], null, null, 2); // Set border to red
                 }
                 else {
-                    char letter = board.getTile(i, j).getTileChar();
-                    String path = "src/tile" + Character.toUpperCase(letter) + ".png";
+                    Tile tile = board.getTile(i, j);
+                    int score = Tile.getTileScore(tile);
+                    String path = "src/images/tile" + score + ".png";
                     boardCells[i][j].setIcon(new ImageIcon(path));
                     boardCells[i][j].setEnabled(false);
                     mouseListener(boardCells[i][j], null, null, 3); // Set border to black
@@ -345,6 +343,9 @@ public class ScrabbleView extends JFrame {
      */
     public void removeTempTile(int x, int y, int handIndex) {
         boardCells[x][y].setText(" ");
+        ImageIcon Icon = new ImageIcon("src/images/regularBoardTile.png");
+        boardCells[x][y].setIcon(Icon);
+        this.setSpecialTiles(boardCells[x][y], x, y);
         boardCells[x][y].setEnabled(true);
         handTiles[handIndex].setEnabled(true);
         mouseListener(handTiles[handIndex], null, null, 1); // Set border to pink
@@ -354,8 +355,12 @@ public class ScrabbleView extends JFrame {
    * Adds a temporary tile to the board and disables it in the player's hand.
    * @param tile Character representing the tile
     */
-    public void addTempTile(char tile, int x, int y, int handIndex) {
-        boardCells[x][y].setText(String.valueOf(tile));
+    public void addTempTile(Tile tile, int x, int y, int handIndex) {
+        boardCells[x][y].setText(String.valueOf(tile.getTileChar()).toUpperCase());
+        int score = Tile.getTileScore(tile);
+        String path = "src/images/tile" + score + ".png";
+        ImageIcon Icon = new ImageIcon(path);
+        boardCells[x][y].setIcon(Icon);
         handTiles[handIndex].setEnabled(false);
         mouseListener(handTiles[handIndex], null, null, 3); // Set border to black
     }
@@ -374,25 +379,30 @@ public class ScrabbleView extends JFrame {
 
     public void setSpecialTiles(JButton button, int x, int y) {
         // Set up imageIcons for special tiles
-        if (x == 7 && y == 7) {
-            ImageIcon centerIcon = new ImageIcon("src/centerTile.png");
-            boardCells[7][7].setIcon(centerIcon); // Highlight center tile for first move requirement
-
+        if (Board.getMultiplier(x, y).equals("normal")) {
+            if (x == 7 && y == 7) {
+                ImageIcon centerIcon = new ImageIcon("src/images/centerTile.png");
+                boardCells[7][7].setIcon(centerIcon); // Highlight center tile for first move requirement
+            }
+            else {
+                ImageIcon bTIcon = new ImageIcon("src/images/regularBoardTile.png");
+                button.setIcon(bTIcon);
+            }
         }
         if (Board.getMultiplier(x, y).equals("DL")) {
-            ImageIcon dLSIcon = new ImageIcon("src/doubleLetterScore.png");
+            ImageIcon dLSIcon = new ImageIcon("src/images/doubleLetterScore.png");
             button.setIcon(dLSIcon);
         }
         if (Board.getMultiplier(x, y).equals("TL")) {
-            ImageIcon tLSIcon = new ImageIcon("src/tripleLetterScore.png");
+            ImageIcon tLSIcon = new ImageIcon("src/images/tripleLetterScore.png");
             button.setIcon(tLSIcon);
         }
         if (Board.getMultiplier(x, y).equals("DW")) {
-            ImageIcon tLSIcon = new ImageIcon("src/doubleWordScore.png");
+            ImageIcon tLSIcon = new ImageIcon("src/images/doubleWordScore.png");
             button.setIcon(tLSIcon);
         }
         if (Board.getMultiplier(x, y).equals("TW")) {
-            ImageIcon tLSIcon = new ImageIcon("src/tripleWordScore.png");
+            ImageIcon tLSIcon = new ImageIcon("src/images/tripleWordScore.png");
             button.setIcon(tLSIcon);
         }
     }
@@ -400,17 +410,12 @@ public class ScrabbleView extends JFrame {
     public void setHandTiles() {
         List<Tile> hand = model.getCurrentPlayer().getHand();
         for (int i = 0; i < model.getCurrentPlayer().getHand().size(); i++) {
-            if (!hand.get(i).isBlank()) {
-                char letter = hand.get(i).getTileChar();
-                String path = "src/tile" + Character.toUpperCase(letter) + ".png";
-                ImageIcon Icon = new ImageIcon(path);
-                handTiles[i].setIcon(Icon);
-            }
-            else {
-                ImageIcon Icon = new ImageIcon("src/tileBlank.png");
-                handTiles[i].setIcon(Icon);
-            }
-            handTiles[i].setText("");
+            Tile tile = hand.get(i);
+            int score = Tile.getTileScore(tile);
+            String path = "src/images/tile" + score + ".png";
+            ImageIcon Icon = new ImageIcon(path);
+            handTiles[i].setText(String.valueOf(tile.getTileChar()).toUpperCase());
+            handTiles[i].setIcon(Icon);
             handTiles[i].setHorizontalTextPosition(SwingConstants.CENTER);
             handTiles[i].setVerticalTextPosition(SwingConstants.CENTER);
         }

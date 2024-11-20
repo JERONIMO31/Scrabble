@@ -241,7 +241,7 @@ public class ScrabbleController implements ActionListener {
                     input = JOptionPane.showInputDialog(view.getFrame(), "Invalid input, try again!\nInput desired char!");
                 }
             }
-            view.addTempTile(selectedTile.tile.getTileChar(), x, y, selectedTile.handIndex);
+            view.addTempTile(selectedTile.tile, x, y, selectedTile.handIndex);
             selectedTile.x = x;
             selectedTile.y = y;
             playedTiles.add(selectedTile);

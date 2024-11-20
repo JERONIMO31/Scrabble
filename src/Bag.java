@@ -50,7 +50,7 @@ public class Bag {
         this.addTiles('x', 1);
         this.addTiles('y', 2);
         this.addTiles('z', 1);
-        this.addTiles(' ', 100);
+        this.addTiles(' ', 2);
     }
 
     private void addTiles(char letter, int count) {

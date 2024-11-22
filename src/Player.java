@@ -113,4 +113,5 @@ public class Player {
             hand.add(new Tile(c));
         }
     }
+    public Bag getBag(){return bag;}
 }

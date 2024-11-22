@@ -81,4 +81,11 @@ public class Bag {
 
         return true;
     }
+    public List<Character> getBagOfChar(){
+        List<Character> characters = new ArrayList<Character>();
+        for (Tile t : tiles){
+            characters.add(t.getTileChar());
+        }
+        return characters;
+    }
 }

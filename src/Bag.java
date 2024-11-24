@@ -6,11 +6,23 @@ import java.util.List;
 public class Bag {
     private static List<Tile> tiles;
 
+    /**
+     * Default constructor.
+     * Initializes the bag with a standard set of tiles and shuffles them.
+     */
+
     public Bag() {
         tiles = new ArrayList<>();
         this.initializeTiles();
         Collections.shuffle(tiles);
     }
+    /**
+     * Alternate constructor.
+     * Initializes the bag with a custom set of tiles for testing purposes.
+     *
+     * @param a a dummy parameter used to differentiate this constructor.
+     */
+
     public Bag(int a){
         tiles = new ArrayList<>();
         this.initializeTiles();
@@ -23,6 +35,9 @@ public class Bag {
         tiles.add(new Tile('t'));
     }
 
+    /**
+     * Initializes the bag with the standard distribution of Scrabble tiles.
+     */
     private void initializeTiles() {
         this.addTiles('a', 9);
         this.addTiles('b', 2);
@@ -53,12 +68,27 @@ public class Bag {
         this.addTiles(' ', 2);
     }
 
+    /**
+     * Adds a specified number of tiles of a given letter to the bag.
+     *
+     * @param letter the letter to add.
+     * @param count  the number of tiles to add for the letter.
+     */
+
     private void addTiles(char letter, int count) {
         for(int i = 0; i < count; ++i) {
             tiles.add(new Tile(letter));
         }
 
     }
+
+    /**
+     * Draws a tile from the bag.
+     * Removes and returns the last tile in the bag.
+     *
+     * @return the drawn tile.
+     * @throws IllegalStateException if the bag is empty.
+     */
 
     public Tile drawTile() {
         if (tiles.isEmpty()) {
@@ -68,9 +98,22 @@ public class Bag {
         }
     }
 
+    /**
+     * Gets the current count of tiles in the bag.
+     *
+     * @return the number of tiles left in the bag.
+     */
+
     public int getTileCount() {
         return tiles.size();
     }
+
+    /**
+     * Checks if the bag contains all the characters of a given word.
+     *
+     * @param word the word to check.
+     * @return true if all characters in the word are present in the bag; false otherwise.
+     */
 
     public boolean ItContains(String word) {
         for(int i = 0; i < word.length(); ++i) {

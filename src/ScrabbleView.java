@@ -136,7 +136,7 @@ public class ScrabbleView extends JFrame {
     }
 
     /**
-     * Prompts the user for the number of players and their names, adding them to the model.
+     * Prompts the user for the number of players, AI players, and their names, adding them to the model.
      */
     public void setPlayers() {
         int playerNum = Integer.parseInt(JOptionPane.showInputDialog(this, "Enter number of players (max 4 players): "));
@@ -377,6 +377,13 @@ public class ScrabbleView extends JFrame {
         this.updateView();
     }
 
+    /**
+     * Sets a board cell's appearance based on if it's a special tile.
+     *
+     * @param button The button representing the board cell.
+     * @param x Row index of the cell.
+     * @param y Column index of the cell.
+     */
     public void setSpecialTiles(JButton button, int x, int y) {
         button.setText(" ");
         // Set up imageIcons for special tiles
@@ -408,6 +415,9 @@ public class ScrabbleView extends JFrame {
         }
     }
 
+    /**
+     * Updates the player's hand display with their current tiles.
+     */
     public void setHandTiles() {
         List<Tile> hand = model.getCurrentPlayer().getHand();
         for (int i = 0; i < model.getCurrentPlayer().getHand().size(); i++) {

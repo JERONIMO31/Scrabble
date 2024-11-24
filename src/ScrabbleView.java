@@ -42,10 +42,8 @@ public class ScrabbleView extends JFrame {
                 boardCells[i][j] = boardCell;
                 boardCells[i][j].setBorder(BorderFactory.createLineBorder(Color.black)); // Set black borders
 
-                //ImageIcon boardIcon = new ImageIcon("src/images/regularBoardTile.png");
                 boardCells[i][j].setHorizontalTextPosition(SwingConstants.CENTER);
                 boardCells[i][j].setVerticalTextPosition(SwingConstants.CENTER);
-                //boardCells[i][j].setIcon(boardIcon); // Set the image as the icon
 
                 mouseListener(boardCells[i][j], null, null, 2); // Set hover border to red
                 boardPanel.add(boardCell);
@@ -135,7 +133,7 @@ public class ScrabbleView extends JFrame {
     }
 
     /**
-     * Prompts the user for the number of players and their names, adding them to the model.
+     * Prompts the user for the number of players, AI players, and their names, adding them to the model.
      */
     public void setPlayers() {
         int playerNum = Integer.parseInt(JOptionPane.showInputDialog(this, "Enter number of players (max 4 players including AIplayer): "));
@@ -166,14 +164,17 @@ public class ScrabbleView extends JFrame {
         return scoreStr;
     }
 
-    /**
-     * Updates the view to reflect the current state of the model.
+     /**
+     * Updates the view to reflect the current state of the game model.
      */
     public void updateView() {
         Board board = this.model.getBoard();
+
+        // If the current player is a bot, let it play its turn
         if(model.getCurrentPlayer() instanceof Bot){
             ((Bot) model.getCurrentPlayer()).playBot(model);
         }
+
         // Restore the board
         for (int i = 0; i < 15; i++) {
             for (int j = 0; j < 15; j++) {
@@ -192,6 +193,7 @@ public class ScrabbleView extends JFrame {
                 }
             }
         }
+        // If the current player is not a bot, update their hand and score
         if(!(model.getCurrentPlayer() instanceof Bot)) {
 
             // Restore the current players hand
@@ -313,6 +315,7 @@ public class ScrabbleView extends JFrame {
         List<Player> players = model.getPlayers();
         Player winner = players.getFirst();
 
+        // Determine the player with the highest score
         for (Player p : players) {
             if (p.getScore() > winner.getScore()) {
                 winner = p;
@@ -385,6 +388,13 @@ public class ScrabbleView extends JFrame {
         this.updateView();
     }
 
+    /**
+     * Sets a board cell's appearance based on if it's a special tile.
+     *
+     * @param button The button representing the board cell.
+     * @param x Row index of the cell.
+     * @param y Column index of the cell.
+     */
     public void setSpecialTiles(JButton button, int x, int y) {
         button.setText(" ");
         // Set up imageIcons for special tiles
@@ -416,6 +426,9 @@ public class ScrabbleView extends JFrame {
         }
     }
 
+    /**
+     * Updates the player's hand display with their current tiles.
+     */
     public void setHandTiles() {
         List<Tile> hand = model.getCurrentPlayer().getHand();
         for (int i = 0; i < model.getCurrentPlayer().getHand().size(); i++) {

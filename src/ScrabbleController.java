@@ -102,11 +102,13 @@ public class ScrabbleController implements ActionListener {
      */
     private void handlePlayButton() {
 
+        // If no tiles have been played, the move is illegal
         if (playedTiles.isEmpty()) {
             handleIllegalMove();
             return;
         }
 
+        // Get the first tile placed by the player
         PlayedTile firstTile = playedTiles.getFirst();
 
         char direction;
@@ -140,7 +142,7 @@ public class ScrabbleController implements ActionListener {
         }
 
         // Construct the word and calculate start/end indexes based on direction
-        if (direction == 'D') {
+        if (direction == 'D') { // Vertical word construction
             yIndex = firstTile.y + 1;
             xIndex = firstTile.x;
             while (!board.isEmpty(xIndex, yIndex) || getPlayedTileAtXY(xIndex, yIndex) != null) {
@@ -160,7 +162,7 @@ public class ScrabbleController implements ActionListener {
             }
             xStartIndex = xIndex;
             yStartIndex = yIndex + 1;
-        } else {
+        } else { // Horizontal word construction
             yIndex = firstTile.y;
             xIndex = firstTile.x + 1;
             while (!board.isEmpty(xIndex, yIndex) || getPlayedTileAtXY(xIndex, yIndex) != null) {
@@ -195,6 +197,7 @@ public class ScrabbleController implements ActionListener {
         if (!model.makeMove(xStartIndex, yStartIndex, direction, word)) {
             handleIllegalMove();
         }
+        // Reset played tiles and selected tile for the next turn
         this.playedTiles = new ArrayList<>();
         this.selectedTile = null;
     }
@@ -210,37 +213,43 @@ public class ScrabbleController implements ActionListener {
         if (!model.getBoard().isEmpty(x, y)) {
             return; // Return if the board space is occupied
         }
+        // If no tile is currently selected for placement
         if (selectedTile == null) {
+            // Check if a tile was previously played at this position
             PlayedTile tile = getPlayedTileAtXY(x, y);
             if (tile != null) {
+                // Remove the temporary tile from the board view and the list of played tiles
                 view.removeTempTile(x, y, tile.handIndex);
                 playedTiles.remove(tile);
             }
-        } else {
+        } else { // If a tile is selected for placement
             PlayedTile tile = getPlayedTileAtXY(x, y);
             if (tile != null) {
+                // Remove the tile from the board view and the list of played tiles
                 view.removeTempTile(x, y, tile.handIndex);
                 playedTiles.remove(tile);
                 if (tile.tile.isBlank()){
                     tile.tile.setTileChar(' ');
                 }
             }
+            // If the selected tile is blank, prompt the user to input a character
             if (selectedTile.tile.isBlank()){
                 String input = JOptionPane.showInputDialog(view.getFrame(), "Input desired char!");
                 while (true) {
-                    if (input == null){
+                    if (input == null){ // If the user cancels, exit without placing the tile
                         return;
                     }
                     if (input.length() == 1){
                         char c = input.charAt(0);
                         if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')){
-                            selectedTile.tile.setTileChar(Character.toLowerCase(c));
+                            selectedTile.tile.setTileChar(Character.toLowerCase(c)); // Set the tile character
                             break;
                         }
                     }
                     input = JOptionPane.showInputDialog(view.getFrame(), "Invalid input, try again!\nInput desired char!");
                 }
             }
+            // Add the tile to the board view and update its position
             view.addTempTile(selectedTile.tile, x, y, selectedTile.handIndex);
             selectedTile.x = x;
             selectedTile.y = y;

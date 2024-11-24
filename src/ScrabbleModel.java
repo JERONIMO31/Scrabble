@@ -82,6 +82,9 @@ public class ScrabbleModel {
         players.add(new Player(name, bag));
     }
 
+
+    public void addBot(String name) {players.add(new Bot(name, bag));}
+
     /**
      * Checks if a word can be placed on the board at the specified coordinates
      * in the given direction without violating any game rules.

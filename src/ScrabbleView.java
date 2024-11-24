@@ -1,8 +1,7 @@
-import javax.swing.*;
 import java.util.List;
 import java.awt.*;
 import java.awt.event.*;
-
+import javax.swing.*;
 public class ScrabbleView extends JFrame {
     ScrabbleModel model;
     ScrabbleController sc;
@@ -139,14 +138,19 @@ public class ScrabbleView extends JFrame {
      * Prompts the user for the number of players and their names, adding them to the model.
      */
     public void setPlayers() {
-        int playerNum = Integer.parseInt(JOptionPane.showInputDialog(this, "Enter number of players (max 4 players): "));
-        while (playerNum > 4 || playerNum < 1) {
+        int playerNum = Integer.parseInt(JOptionPane.showInputDialog(this, "Enter number of players (max 4 players including AIplayer): "));
+        int aiNum =  Integer.parseInt(JOptionPane.showInputDialog(this, "Enter number of AIplayers (max 4 players including AIplayers): "));
+        while (playerNum+aiNum > 4 || playerNum+aiNum < 1) {
             playerNum = Integer.parseInt(JOptionPane.showInputDialog(this, "Invalid number of players. Please state 1, 2, 3, or 4: "));
+            aiNum =  Integer.parseInt(JOptionPane.showInputDialog(this, "Enter number of AIplayers (max 4 players including AIplayers): "));
         }
-
         for (int i = 0; i < playerNum; i++) {
             String name = JOptionPane.showInputDialog(this, "Enter player " + (i + 1) + "'s name: ");
             model.addPlayer(name);
+        }
+        for (int i = 1; i <= aiNum; i++) {
+            String name = "Ai#"+String.valueOf(i);
+            model.addBot(name);
         }
     }
 
@@ -167,7 +171,9 @@ public class ScrabbleView extends JFrame {
      */
     public void updateView() {
         Board board = this.model.getBoard();
-
+        if(model.getCurrentPlayer() instanceof Bot){
+            ((Bot) model.getCurrentPlayer()).playBot(model);
+        }
         // Restore the board
         for (int i = 0; i < 15; i++) {
             for (int j = 0; j < 15; j++) {
@@ -314,9 +320,9 @@ public class ScrabbleView extends JFrame {
         JOptionPane.showMessageDialog(this, "The winner is: " + winner.getName() + "!");
     }
 
-     /**
+    /**
      * Shows a help dialog with instructions on how to play the game.
-      */
+     */
     public void showHelp() {
         JOptionPane.showMessageDialog(this, """
                 To place a tile, select it from your hand then select the space on the board in which you'd like to place it.
@@ -351,10 +357,10 @@ public class ScrabbleView extends JFrame {
         mouseListener(handTiles[handIndex], null, null, 1); // Set border to pink
     }
 
-   /**
-   * Adds a temporary tile to the board and disables it in the player's hand.
-   * @param tile Character representing the tile
-    */
+    /**
+     * Adds a temporary tile to the board and disables it in the player's hand.
+     * @param tile Character representing the tile
+     */
     public void addTempTile(Tile tile, int x, int y, int handIndex) {
         boardCells[x][y].setText(String.valueOf(tile.getTileChar()).toUpperCase());
         int score = Tile.getTileScore(tile);

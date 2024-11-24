@@ -99,6 +99,10 @@ public class Player {
         return hand;
     }
 
+    public boolean isWord(List<Tile> hand, int length){
+
+        return false;
+    }
     /**
      * Returns the current number of tiles in the player's hand.
      *
@@ -113,5 +117,4 @@ public class Player {
             hand.add(new Tile(c));
         }
     }
-    public Bag getBag(){return bag;}
 }

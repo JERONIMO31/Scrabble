@@ -14,7 +14,7 @@ public class Board {
         board = new Tile[15][15];  // Initialize an empty 15x15 board
         setMultiplier();
     }
-
+    public Tile[][] getBoard(){return board;}
     /**
      * Adds a tile to the board at the specified coordinates.
      *

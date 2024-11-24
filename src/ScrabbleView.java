@@ -192,20 +192,22 @@ public class ScrabbleView extends JFrame {
                 }
             }
         }
+        if(!(model.getCurrentPlayer() instanceof Bot)) {
 
-        // Restore the current players hand
-        for (int i = 0; i < model.getCurrentPlayer().getHand().size(); i++) {
-            handTiles[i].setEnabled(true);
-            mouseListener(handTiles[i], null, null, 1); // Set border to pink
+            // Restore the current players hand
+            for (int i = 0; i < model.getCurrentPlayer().getHand().size(); i++) {
+                handTiles[i].setEnabled(true);
+                mouseListener(handTiles[i], null, null, 1); // Set border to pink
+            }
+            this.setHandTiles();
+
+            // Update the players current scores
+            scoreStr = getScoreString();
+            scoreLabel.setText(scoreStr);
+
+            // Update the current player
+            playerName.setText(model.getCurrentPlayer().getName() + "'s hand:");
         }
-        this.setHandTiles();
-
-        // Update the players current scores
-        scoreStr = getScoreString();
-        scoreLabel.setText(scoreStr);
-
-        // Update the current player
-        playerName.setText(model.getCurrentPlayer().getName() + "'s hand:");
     }
 
     /**

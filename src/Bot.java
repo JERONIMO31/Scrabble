@@ -132,8 +132,8 @@ public class Bot extends Player{
             if (s.length() <= length) {// verfies if the enough tiles have matched to a character in s to be able to make the word
                 tempS = s;
                 if (areAllElementsNull(validcharacter)) {
-                    positions.add(0, 8);
-                    positions.add(1, 8);
+                    positions.add(0, 7);
+                    positions.add(1, 7);
                     direction = 'H';
                     for (Tile tempTile : super.getHand()) {
                         if (s.contains(String.valueOf(tempTile.getTileChar()))) {

@@ -99,6 +99,10 @@ public class Player {
         return hand;
     }
 
+    public boolean isWord(List<Tile> hand, int length){
+
+        return false;
+    }
     /**
      * Returns the current number of tiles in the player's hand.
      *

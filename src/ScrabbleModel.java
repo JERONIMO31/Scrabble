@@ -83,6 +83,12 @@ public class ScrabbleModel {
     }
 
     /**
+     * Adds a bot player to the game with the specified name.
+     * @param name The name of the bot to be added.
+     */
+    public void addBot(String name) {players.add(new Bot(name, bag));}
+
+    /**
      * Checks if a word can be placed on the board at the specified coordinates
      * in the given direction without violating any game rules.
      * @param x the starting x-coordinate of the word.
@@ -114,7 +120,6 @@ public class ScrabbleModel {
                 xIndex = x + i;
             }
             if (board.isEmpty(xIndex, yIndex)) {
-                // Count the occurrences of each character that need to be placed
                 charMap.put(c.getTileChar(), charMap.getOrDefault(c.getTileChar(), 0) + 1);
 
                 // Check adjacent tiles
@@ -331,6 +336,7 @@ public class ScrabbleModel {
                 // Check for special score multipliers at the location
                 String m = board.getMultiplier(xIndex, yIndex);
                 if (!m.equals("normal")){
+                    // Apply scoring rules based on multiplier type
                     switch (m){
                         // Apply scoring rules based on multiplier type
                         case "DL" -> {

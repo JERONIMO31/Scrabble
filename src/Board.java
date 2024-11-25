@@ -14,7 +14,7 @@ public class Board {
         board = new Tile[15][15];  // Initialize an empty 15x15 board
         setMultiplier();
     }
-    public Tile[][] getBoard(){return board;}
+
     /**
      * Adds a tile to the board at the specified coordinates.
      *
@@ -69,8 +69,12 @@ public class Board {
         else {return true;}
     }
 
+    /**
+     * Sets up the multipliers for the Scrabble board, initializing positions for Double Letter (DL),
+     * Triple Letter (TL), Double Word (DW), and Triple Word (TW) tiles.
+     */
     private void setMultiplier(){
-
+        // Set up Double Letter (DL) positions
         multipliers[3][0] = "DL";
         multipliers[11][0] = "DL";
         multipliers[6][2] = "DL";
@@ -95,7 +99,8 @@ public class Board {
         multipliers[8][12] = "DL";
         multipliers[3][14] = "DL";
         multipliers[11][14] = "DL";
-        
+
+        // Set up Triple Letter (TL) positions
         multipliers[5][1] = "TL";
         multipliers[9][1] = "TL";
         multipliers[1][5] = "TL";
@@ -109,6 +114,7 @@ public class Board {
         multipliers[5][13] = "TL";
         multipliers[9][13] = "TL";
 
+        // Set up Double Word (DW) positions
         multipliers[1][1] = "DW";
         multipliers[13][1] = "DW";
         multipliers[2][2] = "DW";
@@ -126,6 +132,7 @@ public class Board {
         multipliers[1][13] = "DW";
         multipliers[13][13] = "DW";
 
+        // Set up Triple Word (TW) positions
         multipliers[0][0] = "TW";
         multipliers[7][0] = "TW";
         multipliers[14][0] = "TW";
@@ -136,14 +143,26 @@ public class Board {
         multipliers[14][14] = "TW";
     }
 
+    /**
+     * Returns the multiplier for a given board position, or "normal" if the position is empty or out of bounds.
+     *
+     * @param x the x-coordinate of the board position.
+     * @param y the y-coordinate of the board position.
+     * @return the multiplier at the specified position, or "normal" if none exists.
+     */
     public static String getMultiplier(int x, int y){
         if (x <= 14 && x >= 0 && y <= 14 && y >= 0) {
-            String multiplier = multipliers[x][y];
+            String multiplier = multipliers[x][y]; // Get the multiplier at the given position
             if (multiplier == null) {
+                // If no multiplier exists, it's a regular tile
                 return "normal";
             }
             return multiplier;
         }
         else {return "normal";}
+    }
+
+    public Tile[][] getBoard() {
+        return board;
     }
 }

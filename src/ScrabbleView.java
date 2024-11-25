@@ -173,7 +173,23 @@ public class ScrabbleView extends JFrame {
         Board board = this.model.getBoard();
         if(model.getCurrentPlayer() instanceof Bot){
             ((Bot) model.getCurrentPlayer()).playBot(model);
-        }
+            for (int i = 0; i < 15; i++) {
+                for (int j = 0; j < 15; j++) {
+                    if (board.isEmpty(i, j)) {
+                        boardCells[i][j].setEnabled(true);
+                        this.setSpecialTiles(boardCells[i][j], i, j);
+                    }
+                    else {
+                        Tile tile = board.getTile(i, j);
+                        int score = Tile.getTileScore(tile);
+                        String path = "src/images/tile" + score + ".png";
+                        boardCells[i][j].setText(String.valueOf(Character.toUpperCase(tile.getTileChar())));
+                        boardCells[i][j].setIcon(new ImageIcon(path));
+                        boardCells[i][j].setEnabled(true);
+                    }
+                }
+            }
+        }else{
         // Restore the board
         for (int i = 0; i < 15; i++) {
             for (int j = 0; j < 15; j++) {
@@ -187,13 +203,11 @@ public class ScrabbleView extends JFrame {
                     int score = Tile.getTileScore(tile);
                     String path = "src/images/tile" + score + ".png";
                     boardCells[i][j].setIcon(new ImageIcon(path));
-                    boardCells[i][j].setEnabled(false);
+                    boardCells[i][j].setEnabled(true);
                     mouseListener(boardCells[i][j], null, null, 3); // Set border to black
                 }
             }
         }
-        if(!(model.getCurrentPlayer() instanceof Bot)) {
-
             // Restore the current players hand
             for (int i = 0; i < model.getCurrentPlayer().getHand().size(); i++) {
                 handTiles[i].setEnabled(true);

@@ -11,7 +11,11 @@ public class Bot extends Player{
     public List<List<String>> moves;
     public List<Character> hand;
 
-
+    /**
+     * Constructor for Bot
+     * @param bag is the tile bag, name is name of the bot
+     *sets up the Bot
+     */
     public Bot(String name, Bag bag){
         super(name,bag);
     }
@@ -57,16 +61,18 @@ public class Bot extends Player{
                         if(tempc == c){
                             break;
                         }
-                        if(direction == 'H'){
+                        if(direction == 'D'){
                             x-= 1;
                         }
-                        if(direction == 'D'){
+                        if(direction == 'H'){
                             y -=1;
                         }
                     }
-                    positions.set(0,x);
-                    positions.set(1,y);
+                    positions.add(x);
+                    positions.add(y);
+                    break;
                 }
+                break;
             }
         }
         return positions;
@@ -76,8 +82,8 @@ public class Bot extends Player{
         for (int x = 0; x<= 14; x++){
             for (int y = 0; y<= 14; y++){
                 if(characters.get(x).get(y) == c){
-                    positions.set(0,x);
-                    positions.set(1,y);
+                    positions.add(x);
+                    positions.add(y);
                 }
             }
         }
@@ -100,10 +106,10 @@ public class Bot extends Player{
         List<List<Character>> affectedWords = AffectedWords(model);
         List<Character> validcharacter = characterList(affectedWords);// list of character to put ai words on
         HashMap<String, Character> moveSet = new HashMap<>();
-        hand = new ArrayList<>();
         Tile interactionTile = null;
         List<Tile> Tiles = new ArrayList<Tile>();
         String mov = null;
+        hand = new ArrayList<>();
         int count = 0;
         loadWordsFromFile();
         boolean breaks;
@@ -111,6 +117,7 @@ public class Bot extends Player{
         int positionx = 1;
         int positiony = 1;
         List<Integer> positions = new ArrayList<>();
+
         for (Tile temp : super.getHand()) {
             hand.add(temp.getTileChar());
             count += 1;
@@ -118,6 +125,14 @@ public class Bot extends Player{
         for (String s : words) {// loops through the dictionary to isolate each string
             breaks = false;
             int length = 0;
+            if (!areAllElementsNull(validcharacter)) {
+                for(char temp : s.toCharArray()){
+                    if(validcharacter.contains(temp)){
+                        length += 1;
+                        break;
+                    }
+                }
+            }
             String tempS = "";
             if (s.length() > 7 + length) {// elimantes any words that are too big for the and size plus 1 character if it isnt the start
                 continue;
@@ -129,7 +144,8 @@ public class Bot extends Player{
                     tempS = tempS.replaceFirst(String.valueOf(tempc), "");// replaces the charcter just found so we can find repeat character
                 }
             }
-            if (s.length() <= length) {// verfies if the enough tiles have matched to a character in s to be able to make the word
+            if (s.length() <= length && tempS.length() <= 1) {// verfies if the enough tiles have matched to a character in s to be able to make the word
+                Tiles = new ArrayList<>();
                 tempS = s;
                 if (areAllElementsNull(validcharacter)) {
                     positions.add(0, 7);
@@ -144,14 +160,27 @@ public class Bot extends Player{
                     model.makeMove(positions.get(0), positions.get(1), direction, Tiles);
                     break;
                 } else {
-                    length += 1;
-                    for (char tempc : s.toCharArray()) {
-                        for (char tempw : validcharacter) {
-                            if (tempc == tempw) {
-                                direction = getDirection(affectedWords, tempc, model);
-                                positions = findStartingCoordinates(affectedWords, tempc, s, direction);
-                                interactionTile = new Tile(tempc);
-                            }
+                    for (char tempo :s.toCharArray()){
+                        if(validcharacter.contains(tempo)){
+                            breaks = true;
+                            break;
+                        }
+                    }
+
+                    if(!breaks|| s.length() == 1){
+                        continue;
+                    }
+                    breaks = false;
+                    while(validcharacter.remove(null)){
+                    }
+                    for (char temp : s.toCharArray()) {
+                        if (validcharacter.contains(temp)) {
+                            direction = getDirection(affectedWords, temp, model);
+                            positions = findStartingCoordinates(affectedWords, temp, s, direction);
+                            interactionTile = new Tile(temp);
+                            tempS = tempS.replaceFirst(String.valueOf(interactionTile.getTileChar()), "");
+                            Tiles.add(interactionTile);
+                            break;
                         }
                     }
                     if (direction == 'N') {
@@ -163,9 +192,12 @@ public class Bot extends Player{
                             tempS = tempS.replaceFirst(String.valueOf(tempTile.getTileChar()), "");
                         }
                         if (model.isValid(positions.get(0), positions.get(1), direction, Tiles)) {
-                            moves.get(positions.get(0)).set(positions.get(1), s);
-                            moveSet.put(s, direction);
+                            breaks = model.makeMove(positions.get(0), positions.get(1), direction, Tiles);
+                            break;
                         }
+                    }
+                    if(breaks){
+                        break;
                     }
                 }
 
@@ -236,7 +268,7 @@ public class Bot extends Player{
        Board = board.getBoard();
        int xtouching = 0;// checks how many tiles in the x and  y direction the current tile is in contact with.
        int ytouching = 0;
-       if(board.getTile(position.get(0)+1,position.get(1)) != null){// these statements check if the tiles to the left right up or down of the tile are filled
+       if(board.getTile(position.get(0) +1,position.get(1)) != null){// these statements check if the tiles to the left right up or down of the tile are filled
            xtouching += 1;
        }
        if(board.getTile(position.get(0)-1,position.get(1)) != null){
@@ -248,11 +280,11 @@ public class Bot extends Player{
        if(board.getTile(position.get(0),position.get(1)-1) != null){
            ytouching += 1;
        }
-       if(ytouching == 0){
-           Direction = 'D';
+       if(xtouching == 0){
+           Direction = 'H';
        }
        else{
-           Direction = 'H';
+           Direction = 'D';
        }
        return Direction;
    }

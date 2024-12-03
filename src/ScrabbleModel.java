@@ -1,5 +1,5 @@
-import java.io.File;
-import java.io.FileNotFoundException;
+import javax.swing.*;
+import java.io.*;
 import java.util.*;
 
 public class ScrabbleModel {
@@ -381,6 +381,14 @@ public class ScrabbleModel {
     }
 
     /**
+     *
+     * @return true if first move has not happened yet.
+     */
+    public boolean isFirst(){
+        return firstMove;
+    }
+
+    /**
      * Resets the game by reinitializing the board, bag, and players.
      */
     public void resetGame() {
@@ -402,4 +410,50 @@ public class ScrabbleModel {
         }
     }
 
+    /**
+     * Saves the current state of the game to a specified file.
+     *
+     * @param fileName The name of the file where the game state should be saved.
+     */
+    public void saveState(String fileName) {
+        try {
+            FileOutputStream file = new FileOutputStream(fileName);
+            ObjectOutputStream out = new ObjectOutputStream(file);
+            out.writeObject(this);
+            out.close();
+            file.close();
+        } catch (IOException e) {
+            if (view != null) {
+                JOptionPane.showMessageDialog(view.getFrame(), "Error saving game state!:" + e.getMessage());
+            } else {
+                System.out.println("Error saving game state:" + e.getMessage());
+            }
+        }
+    }
+
+    /**
+     * Loads the game state from a specified file and updates the view if it exists.
+     *
+     * @param fileName The name of the file from which the game state should be loaded.
+     */
+    public void loadState (String fileName) {
+        try {
+            FileInputStream file = new FileInputStream(fileName);
+            ObjectInputStream in = new ObjectInputStream(file);
+            ScrabbleModel model = (ScrabbleModel) in.readObject();
+            if (view != null) {
+                view.setModel(model);
+                view.updateView();
+            }
+            else {
+                System.out.println("Should not be loading game state with no view...");
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            if (view != null) {
+                JOptionPane.showMessageDialog(view.getFrame(), "Error loading game state!:" + e.getMessage());
+            } else {
+                System.out.println("Error loading game state:" + e.getMessage());
+            }
+        }
+    }
 }

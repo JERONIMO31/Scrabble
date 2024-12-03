@@ -111,7 +111,7 @@ public class ScrabbleView extends JFrame {
         mouseListener(null, null, resetGameItem, 2); // Set hover border to pink
         JMenuItem helpItem = new JMenuItem("Help");
         mouseListener(null, null, helpItem, 2); // Set hover border to pink
-        JMenuItem saveItem = new JMenuItem("SAVE");
+        JMenuItem saveItem = new JMenuItem("Save game");
         mouseListener(null, null, saveItem, 2); // Set hover border to pink
 
         helpItem.setActionCommand("HELP");
@@ -144,6 +144,7 @@ public class ScrabbleView extends JFrame {
             boardMenu.add(layoutItem);
         }
 
+        loadMenu = new JMenu("Load game");
         updateLoadMenu();
 
         menuBar.add(gameMenu);
@@ -219,6 +220,7 @@ public class ScrabbleView extends JFrame {
                     String path = "src/images/tile" + score + ".png";
                     boardCells[i][j].setIcon(new ImageIcon(path));
                     boardCells[i][j].setEnabled(false);
+                    boardCells[i][j].setText(String.valueOf(board.getTile(i, j).getTileChar()));
                     mouseListener(boardCells[i][j], null, null, 3); // Set border to black
                 }
             }
@@ -428,7 +430,7 @@ public class ScrabbleView extends JFrame {
     public void setSpecialTiles(JButton button, int x, int y) {
         button.setText(" ");
         // Set up imageIcons for special tiles
-        if (Board.getMultiplier(x, y).equals("normal")) {
+        if (model.getBoard().getMultiplier(x, y).equals("normal")) {
             if (x == 7 && y == 7) {
                 ImageIcon centerIcon = new ImageIcon("src/images/centerTile.png");
                 boardCells[7][7].setIcon(centerIcon); // Highlight center tile for first move requirement
@@ -438,19 +440,19 @@ public class ScrabbleView extends JFrame {
                 button.setIcon(bTIcon);
             }
         }
-        if (Board.getMultiplier(x, y).equals("DL")) {
+        if (model.getBoard().getMultiplier(x, y).equals("DL")) {
             ImageIcon dLSIcon = new ImageIcon("src/images/doubleLetterScore.png");
             button.setIcon(dLSIcon);
         }
-        if (Board.getMultiplier(x, y).equals("TL")) {
+        if (model.getBoard().getMultiplier(x, y).equals("TL")) {
             ImageIcon tLSIcon = new ImageIcon("src/images/tripleLetterScore.png");
             button.setIcon(tLSIcon);
         }
-        if (Board.getMultiplier(x, y).equals("DW")) {
+        if (model.getBoard().getMultiplier(x, y).equals("DW")) {
             ImageIcon tLSIcon = new ImageIcon("src/images/doubleWordScore.png");
             button.setIcon(tLSIcon);
         }
-        if (Board.getMultiplier(x, y).equals("TW")) {
+        if (model.getBoard().getMultiplier(x, y).equals("TW")) {
             ImageIcon tLSIcon = new ImageIcon("src/images/tripleWordScore.png");
             button.setIcon(tLSIcon);
         }
@@ -515,12 +517,11 @@ public class ScrabbleView extends JFrame {
         } else {
             System.out.println("Invalid directory path.");
         }
-
     }
 
     public void updateLoadMenu() {
+        loadMenu.removeAll();
         // set up menu for loading games
-        loadMenu = new JMenu("Load Game");
         mouseListener(null, loadMenu, null, 2); // Set hover border to pink
         getGameSaves();
         for (String name : saveNames) {
@@ -530,6 +531,7 @@ public class ScrabbleView extends JFrame {
             layoutItem.addActionListener(sc);
             loadMenu.add(layoutItem);
         }
+
     }
 
     public static void main(String[] args) {

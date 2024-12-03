@@ -6,7 +6,7 @@ public class Player implements Serializable {
     private final String name;
     private List<Tile> hand;
     private int myScore;
-    private static Bag bag;
+    private Bag bag;
 
     /**
      * Constructor for the Player class.
@@ -17,7 +17,7 @@ public class Player implements Serializable {
      */
     public Player(String name, Bag bag) {
         this.name = name;
-        Player.bag = bag;  // Set the bag for all Player instances (if shared)
+        this.bag = bag;  // Set the bag for all Player instances (if shared)
         this.hand = new ArrayList<>();  // Initialize player's hand as an empty list
         this.myScore = 0;  // Initialize score to 0
         this.refillHand();  // Fill the player's hand with tiles

@@ -1,6 +1,7 @@
 import javax.swing.plaf.synth.SynthTextAreaUI;
+import java.io.Serializable;
 import java.util.*;
-public class Tile {
+public class Tile implements Serializable {
     private char tileChar;
     private boolean isBlank = false;
 

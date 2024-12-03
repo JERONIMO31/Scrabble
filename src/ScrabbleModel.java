@@ -3,13 +3,13 @@ import java.io.*;
 import java.util.*;
 
 public class ScrabbleModel implements Serializable {
-    private static List<Player> players;
-    private static Board board;
-    private static Bag bag;
+    private List<Player> players;
+    private Board board;
+    private Bag bag;
     private transient ScrabbleView view;
-    private static int currentPlayerIndex;
-    private static HashSet<String> wordSet;
-    private static Boolean firstMove;
+    private int currentPlayerIndex;
+    private HashSet<String> wordSet;
+    private Boolean firstMove;
 
     /**
      * Constructor for ScrabbleModel.
@@ -412,7 +412,7 @@ public class ScrabbleModel implements Serializable {
      * Retrieves the player list.
      * @return the player list.
      */
-    public static List<Player> getPlayers() {
+    public List<Player> getPlayers() {
         return players;
     }
 

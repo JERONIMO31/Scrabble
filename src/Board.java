@@ -7,7 +7,7 @@ import java.io.File;
 
 public class Board implements Serializable {
     private Tile[][] board;
-    private static String[][] multipliers;
+    private String[][] multipliers;
 
     /**
      * Constructor for the Board class.
@@ -114,7 +114,7 @@ public class Board implements Serializable {
      * @param y the y-coordinate of the board position.
      * @return the multiplier at the specified position, or "normal" if none exists.
      */
-    public static String getMultiplier(int x, int y){
+    public String getMultiplier(int x, int y){
         if (x <= 14 && x >= 0 && y <= 14 && y >= 0) {
             String multiplier = multipliers[x][y]; // Get the multiplier at the given position
             if (multiplier == null) {

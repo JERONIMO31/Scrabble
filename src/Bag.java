@@ -1,10 +1,11 @@
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Bag {
-    private static List<Tile> tiles;
+public class Bag implements Serializable {
+    private List<Tile> tiles;
 
     /**
      * Default constructor.

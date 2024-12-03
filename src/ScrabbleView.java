@@ -1,3 +1,5 @@
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.awt.*;
 import java.awt.event.*;
@@ -10,6 +12,7 @@ public class ScrabbleView extends JFrame {
     private final JLabel playerName;
     private final JLabel scoreLabel;
     private String scoreStr;
+    private List<String> layoutNames;
 
     /**
      * Constructor for ScrabbleView.
@@ -22,6 +25,8 @@ public class ScrabbleView extends JFrame {
         this.setLayout(new BorderLayout());
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(1000, 1000);
+
+        layoutNames = new ArrayList<>();
 
         model = new ScrabbleModel(this);
         sc = new ScrabbleController(this.model, this);
@@ -113,12 +118,25 @@ public class ScrabbleView extends JFrame {
         resetGameItem.setActionCommand("RGNP");
         resetGameItem.addActionListener(sc); // New game with new players actionListener
 
+        // set up menu for the board layouts
+        JMenu boardMenu = new JMenu("Board Layouts");
+        mouseListener(null, boardMenu, null, 2); // Set hover border to pink
+        getBoardLayouts();
+        for (String name : layoutNames) {
+            JMenuItem layoutItem = new JMenuItem(name);
+            mouseListener(null, null, layoutItem, 2);
+            layoutItem.setActionCommand(name);
+            layoutItem.addActionListener(sc);
+            boardMenu.add(layoutItem);
+        }
+
         JMenuBar menuBar = new JMenuBar();
         gameMenu.add(resetGameItem);
         gameMenu.add(resetGameSPItem);
         gameMenu.add(helpItem);
 
         menuBar.add(gameMenu);
+        menuBar.add(boardMenu);
         this.setJMenuBar(menuBar); // Add menu bar to frame
 
         // Add panels to the frame
@@ -441,6 +459,31 @@ public class ScrabbleView extends JFrame {
             handTiles[i].setHorizontalTextPosition(SwingConstants.CENTER);
             handTiles[i].setVerticalTextPosition(SwingConstants.CENTER);
         }
+    }
+
+    public void setModel(ScrabbleModel model) {
+        this.model = model;
+        sc.setModel(model);
+    }
+
+    public void getBoardLayouts() {
+        File directory = new File("src/boardLayouts");
+
+        if (directory.exists() && directory.isDirectory()) {
+            // List all files in directory
+            File[] files = directory.listFiles();
+
+            if (files != null) {
+                for (File file : files) {
+                    layoutNames.add(file.getName());
+                }
+            } else {
+                System.out.println("Directory is empty or cannot be read.");
+            }
+        } else {
+            System.out.println("Invalid directory path.");
+        }
+
     }
 
     public static void main(String[] args) {

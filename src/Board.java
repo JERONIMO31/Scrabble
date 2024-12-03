@@ -1,5 +1,8 @@
 import javax.swing.*;
 import java.util.ArrayList;
+import org.w3c.dom.*;
+import javax.xml.parsers.*;
+import java.io.File;
 
 public class Board {
     private Tile[][] board;
@@ -12,7 +15,7 @@ public class Board {
     public Board() {
         multipliers = new String[15][15]; 
         board = new Tile[15][15];  // Initialize an empty 15x15 board
-        setMultiplier();
+        setMultiplier("defaultLayout.txt");
     }
     public Tile[][] getBoard(){return board;}
     /**
@@ -73,74 +76,32 @@ public class Board {
      * Sets up the multipliers for the Scrabble board, initializing positions for Double Letter (DL),
      * Triple Letter (TL), Double Word (DW), and Triple Word (TW) tiles.
      */
-    private void setMultiplier(){
-        // Set up Double Letter (DL) positions
-        multipliers[3][0] = "DL";
-        multipliers[11][0] = "DL";
-        multipliers[6][2] = "DL";
-        multipliers[8][2] = "DL";
-        multipliers[0][3] = "DL";
-        multipliers[7][3] = "DL";
-        multipliers[14][3] = "DL";
-        multipliers[2][6] = "DL";
-        multipliers[6][6] = "DL";
-        multipliers[8][6] = "DL";
-        multipliers[12][6] = "DL";
-        multipliers[3][7] = "DL";
-        multipliers[11][7] = "DL";
-        multipliers[2][8] = "DL";
-        multipliers[6][8] = "DL";
-        multipliers[8][8] = "DL";
-        multipliers[12][8] = "DL";
-        multipliers[0][11] = "DL";
-        multipliers[7][11] = "DL";
-        multipliers[14][11] = "DL";
-        multipliers[6][12] = "DL";
-        multipliers[8][12] = "DL";
-        multipliers[3][14] = "DL";
-        multipliers[11][14] = "DL";
+    private void setMultiplier(String fileName){
+        try {
+            File file = new File("src/boardLayouts/" + fileName);
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document doc = builder.parse(file);
 
-        // Set up Triple Letter (TL) positions
-        multipliers[5][1] = "TL";
-        multipliers[9][1] = "TL";
-        multipliers[1][5] = "TL";
-        multipliers[5][5] = "TL";
-        multipliers[9][5] = "TL";
-        multipliers[13][5] = "TL";
-        multipliers[1][9] = "TL";
-        multipliers[5][9] = "TL";
-        multipliers[9][9] = "TL";
-        multipliers[13][9] = "TL";
-        multipliers[5][13] = "TL";
-        multipliers[9][13] = "TL";
+            doc.getDocumentElement().normalize();
 
-        // Set up Double Word (DW) positions
-        multipliers[1][1] = "DW";
-        multipliers[13][1] = "DW";
-        multipliers[2][2] = "DW";
-        multipliers[12][2] = "DW";
-        multipliers[3][3] = "DW";
-        multipliers[11][3] = "DW";
-        multipliers[4][4] = "DW";
-        multipliers[10][4] = "DW";
-        multipliers[4][10] = "DW";
-        multipliers[10][10] = "DW";
-        multipliers[3][11] = "DW";
-        multipliers[11][11] = "DW";
-        multipliers[2][12] = "DW";
-        multipliers[12][12] = "DW";
-        multipliers[1][13] = "DW";
-        multipliers[13][13] = "DW";
+            NodeList types = doc.getElementsByTagName("type");
 
-        // Set up Triple Word (TW) positions
-        multipliers[0][0] = "TW";
-        multipliers[7][0] = "TW";
-        multipliers[14][0] = "TW";
-        multipliers[0][7] = "TW";
-        multipliers[14][7] = "TW";
-        multipliers[0][14] = "TW";
-        multipliers[7][14] = "TW";
-        multipliers[14][14] = "TW";
+            for (int i = 0; i < types.getLength(); i++) {
+                Element typeElement = (Element) types.item(i);
+                String typeName = typeElement.getAttribute("name");
+
+                NodeList positions = typeElement.getElementsByTagName("position");
+                for (int j = 0; j < positions.getLength(); j++) {
+                    Element position = (Element) positions.item(j);
+                    int row = Integer.parseInt(position.getAttribute("row"));
+                    int col = Integer.parseInt(position.getAttribute("col"));
+                    multipliers[row][col] = typeName;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**

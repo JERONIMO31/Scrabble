@@ -86,7 +86,6 @@ public class ScrabbleController implements ActionListener {
             }
             case "LOAD" -> model.loadState("src/saves/" + position[1]);
             case "XML" -> {
-                System.out.println("Button pressed");
                 model.getBoard().setMultiplier(position[1]);
                 view.updateView();
             }

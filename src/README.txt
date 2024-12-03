@@ -1,6 +1,6 @@
 PROJECT TITLE: Scrabble 
 
-PURPOSE OF PROJECT: To create a GUI based scrabble game for 1 to 4 players, as deliverable 2 for the SYSC3110 project.
+PURPOSE OF PROJECT: To improve on the GUI based scrabble game for 1 to 4 players, as deliverable 4 for the SYSC3110 project.
                     This was done using the MVC design pattern and java GUI components outlined in the class lectures.
 
 AUTHORS: Sebastian Ezman, Jeronimo Cumming, Simon Damato, Kaitlyn Conron
@@ -20,3 +20,6 @@ USER INSTRUCTIONS: When the program is run a pop up will appear prompting you fo
                         2. format the position of your special squares by replacing the value of 'row' and 'col' in the appropriate
                            multiplier field to the position you desire, remember the board is 0-based.
                         3. once complete, run the game, your custom board will appear under the 'Board Layouts' menu with the tile you've chosen.
+
+                    You can save the current game as is by clicking the 'Save' option from the 'Game' menu. This will prompt you
+                    for a name to save the game as. You can then reload any saved game by clicking the 'Load' menu and selecting the game you wish.

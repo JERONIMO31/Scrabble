@@ -1,9 +1,10 @@
 import javax.swing.*;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.Serializable;
 import java.util.*;
 
-public class Bot extends Player{
+public class Bot extends Player  implements Serializable {
     private Random rand;
     private Board board;
     private Tile[][] Board;

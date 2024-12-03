@@ -13,6 +13,8 @@ public class ScrabbleView extends JFrame {
     private final JLabel scoreLabel;
     private String scoreStr;
     private List<String> layoutNames;
+    private List<String> saveNames;
+    private JMenu loadMenu;
 
     /**
      * Constructor for ScrabbleView.
@@ -27,6 +29,7 @@ public class ScrabbleView extends JFrame {
         this.setSize(1000, 1000);
 
         layoutNames = new ArrayList<>();
+        saveNames = new ArrayList<>();
 
         model = new ScrabbleModel(this);
         sc = new ScrabbleController(this.model, this);
@@ -108,6 +111,8 @@ public class ScrabbleView extends JFrame {
         mouseListener(null, null, resetGameItem, 2); // Set hover border to pink
         JMenuItem helpItem = new JMenuItem("Help");
         mouseListener(null, null, helpItem, 2); // Set hover border to pink
+        JMenuItem saveItem = new JMenuItem("SAVE");
+        mouseListener(null, null, saveItem, 2); // Set hover border to pink
 
         helpItem.setActionCommand("HELP");
         helpItem.addActionListener(sc); // Help action
@@ -117,6 +122,15 @@ public class ScrabbleView extends JFrame {
 
         resetGameItem.setActionCommand("RGNP");
         resetGameItem.addActionListener(sc); // New game with new players actionListener
+
+        saveItem.setActionCommand("SAVE");
+        saveItem.addActionListener(sc); // Save action
+
+        JMenuBar menuBar = new JMenuBar();
+        gameMenu.add(resetGameItem);
+        gameMenu.add(resetGameSPItem);
+        gameMenu.add(helpItem);
+        gameMenu.add(saveItem);
 
         // set up menu for the board layouts
         JMenu boardMenu = new JMenu("Board Layouts");
@@ -130,13 +144,11 @@ public class ScrabbleView extends JFrame {
             boardMenu.add(layoutItem);
         }
 
-        JMenuBar menuBar = new JMenuBar();
-        gameMenu.add(resetGameItem);
-        gameMenu.add(resetGameSPItem);
-        gameMenu.add(helpItem);
+        updateLoadMenu();
 
         menuBar.add(gameMenu);
         menuBar.add(boardMenu);
+        menuBar.add(loadMenu);
         this.setJMenuBar(menuBar); // Add menu bar to frame
 
         // Add panels to the frame
@@ -466,7 +478,7 @@ public class ScrabbleView extends JFrame {
         sc.setModel(model);
     }
 
-    public void getBoardLayouts() {
+    private void getBoardLayouts() {
         File directory = new File("src/boardLayouts");
 
         if (directory.exists() && directory.isDirectory()) {
@@ -484,6 +496,40 @@ public class ScrabbleView extends JFrame {
             System.out.println("Invalid directory path.");
         }
 
+    }
+
+    private void getGameSaves() {
+        File directory = new File("src/saves");
+        saveNames = new ArrayList<>();
+        if (directory.exists() && directory.isDirectory()) {
+            // List all files in directory
+            File[] files = directory.listFiles();
+
+            if (files != null) {
+                for (File file : files) {
+                    saveNames.add(file.getName());
+                }
+            } else {
+                System.out.println("Directory is empty or cannot be read.");
+            }
+        } else {
+            System.out.println("Invalid directory path.");
+        }
+
+    }
+
+    public void updateLoadMenu() {
+        // set up menu for loading games
+        loadMenu = new JMenu("Load Game");
+        mouseListener(null, loadMenu, null, 2); // Set hover border to pink
+        getGameSaves();
+        for (String name : saveNames) {
+            JMenuItem layoutItem = new JMenuItem(name);
+            mouseListener(null, null, layoutItem, 2);
+            layoutItem.setActionCommand("LOAD " + name);
+            layoutItem.addActionListener(sc);
+            loadMenu.add(layoutItem);
+        }
     }
 
     public static void main(String[] args) {

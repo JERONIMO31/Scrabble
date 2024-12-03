@@ -2,11 +2,11 @@ import javax.swing.*;
 import java.io.*;
 import java.util.*;
 
-public class ScrabbleModel {
+public class ScrabbleModel implements Serializable {
     private static List<Player> players;
     private static Board board;
     private static Bag bag;
-    private final ScrabbleView view;
+    private transient ScrabbleView view;
     private static int currentPlayerIndex;
     private static HashSet<String> wordSet;
     private static Boolean firstMove;
@@ -39,6 +39,10 @@ public class ScrabbleModel {
         this.loadWordsFromFile();
         firstMove = true;
         currentPlayerIndex = 0;
+    }
+
+    public void setView(ScrabbleView view){
+        this.view = view;
     }
 
     /**
@@ -449,6 +453,14 @@ public class ScrabbleModel {
      */
     public void saveState(String fileName) {
         try {
+            String directoryPath = "src/saves";
+
+            File directory = new File(directoryPath);
+
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
+
             FileOutputStream file = new FileOutputStream(fileName);
             ObjectOutputStream out = new ObjectOutputStream(file);
             out.writeObject(this);
@@ -474,6 +486,7 @@ public class ScrabbleModel {
             ObjectInputStream in = new ObjectInputStream(file);
             ScrabbleModel model = (ScrabbleModel) in.readObject();
             if (view != null) {
+                model.setView(view);
                 view.setModel(model);
                 view.updateView();
             }

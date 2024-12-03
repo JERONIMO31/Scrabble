@@ -1,10 +1,11 @@
 import javax.swing.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import org.w3c.dom.*;
 import javax.xml.parsers.*;
 import java.io.File;
 
-public class Board {
+public class Board implements Serializable {
     private Tile[][] board;
     private static String[][] multipliers;
 
@@ -86,6 +87,8 @@ public class Board {
             doc.getDocumentElement().normalize();
 
             NodeList types = doc.getElementsByTagName("type");
+
+            multipliers = new String[15][15];
 
             for (int i = 0; i < types.getLength(); i++) {
                 Element typeElement = (Element) types.item(i);

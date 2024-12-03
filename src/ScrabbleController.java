@@ -82,10 +82,13 @@ public class ScrabbleController implements ActionListener {
                     input = JOptionPane.showInputDialog(view.getFrame(), "No spaces allowed! Title your save!");
                 }
                 model.saveState("src/saves/" + input);
+                view.updateLoadMenu();
             }
             case "LOAD" -> model.loadState("src/saves/" + position[1]);
             case "XML" -> {
+                System.out.println("Button pressed");
                 model.getBoard().setMultiplier(position[1]);
+                view.updateView();
             }
         }
     }

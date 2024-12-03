@@ -14,7 +14,7 @@ public class ScrabbleView extends JFrame {
     private String scoreStr;
     private List<String> layoutNames;
     private List<String> saveNames;
-    private JMenu loadMenu;
+    private JMenu loadMenu, boardMenu;
 
     /**
      * Constructor for ScrabbleView.
@@ -133,7 +133,7 @@ public class ScrabbleView extends JFrame {
         gameMenu.add(saveItem);
 
         // set up menu for the board layouts
-        JMenu boardMenu = new JMenu("Board Layouts");
+        boardMenu = new JMenu("Board Layouts");
         mouseListener(null, boardMenu, null, 2); // Set hover border to pink
         getBoardLayouts();
         for (String name : layoutNames) {
@@ -200,6 +200,10 @@ public class ScrabbleView extends JFrame {
      */
     public void updateView() {
         Board board = this.model.getBoard();
+
+        if (!model.isFirst()) {
+            boardMenu.setEnabled(false);
+        }
 
         // If the current player is a bot, let it play its turn
         if(model.getCurrentPlayer() instanceof Bot){

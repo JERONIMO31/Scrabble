@@ -220,7 +220,7 @@ public class ScrabbleView extends JFrame {
                     String path = "src/images/tile" + score + ".png";
                     boardCells[i][j].setIcon(new ImageIcon(path));
                     boardCells[i][j].setEnabled(false);
-                    boardCells[i][j].setText(String.valueOf(board.getTile(i, j).getTileChar()));
+                    boardCells[i][j].setText(String.valueOf(board.getTile(i, j).getTileChar()).toUpperCase());
                     mouseListener(boardCells[i][j], null, null, 3); // Set border to black
                 }
             }

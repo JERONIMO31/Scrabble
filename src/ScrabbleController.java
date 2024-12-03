@@ -145,10 +145,11 @@ public class ScrabbleController implements ActionListener {
                 direction = 'R';
             } else if (!board.isEmpty(firstTile.x, firstTile.y - 1) || !board.isEmpty(firstTile.x, firstTile.y + 1)) {
                 direction = 'D';
-            } else {
+            } else if (!model.isFirst()) {
                 handleIllegalMove();
                 return;
             }
+            else direction = 'D';
         } else {
             // Check if the direction is down or right based on tile placements
             direction = (firstTile.x == playedTiles.get(1).x) ? 'D' : 'R';

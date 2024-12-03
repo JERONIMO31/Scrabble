@@ -117,6 +117,7 @@ public class ScrabbleModel {
                 // Count the occurrences of each character that need to be placed
                 charMap.put(c.getTileChar(), charMap.getOrDefault(c.getTileChar(), 0) + 1);
 
+                // Check adjacent tiles
                 if (!board.isEmpty(xIndex + 1, yIndex) || !board.isEmpty(xIndex - 1, yIndex) ||
                         !board.isEmpty(xIndex, yIndex + 1)  || !board.isEmpty(xIndex, yIndex - 1) ){
                     isTouching = true;
@@ -228,26 +229,30 @@ public class ScrabbleModel {
 
         // Search for adjacent tiles to complete the word in the specified direction
         if (direction == 'D') {
-            yIndex = y + 1;
+            yIndex = y + 1; // Search downward
             xIndex = x;
             while (!board.isEmpty(xIndex, yIndex)) {
+                // Add tiles below the starting position to the word
                 word.add(board.getTile(xIndex, yIndex));
                 yIndex++;
             }
-            yIndex = y - 1;
+            yIndex = y - 1; // Search upward
             while (!board.isEmpty(xIndex, yIndex)) {
+                // Add tiles above the starting position to the word
                 word.addFirst(board.getTile(xIndex, yIndex));
                 yIndex--;
             }
         } else {
             yIndex = y;
-            xIndex = x + 1;
+            xIndex = x + 1; // Search to the right
             while (!board.isEmpty(xIndex, yIndex)) {
+                // Add tiles to the right of the starting position to the word
                 word.add(board.getTile(xIndex, yIndex));
                 xIndex++;
             }
-            xIndex = x - 1;
+            xIndex = x - 1; // Search to the left
             while (!board.isEmpty(xIndex, yIndex)) {
+                // Add tiles to the left of the starting position to the word
                 word.addFirst(board.getTile(xIndex, yIndex));
                 xIndex--;
             }
@@ -256,6 +261,15 @@ public class ScrabbleModel {
         return word;
     }
 
+    /**
+     * Scores a word and updates the current player's score.
+     * The score is calculated based on the tiles in the word, an additional base score,
+     * and a multiplier applied to the total score.
+     *
+     * @param word The word to score, represented as a list of tiles.
+     * @param multiplier The multiplier to apply to the word's total score (e.g., for double/triple word scores).
+     * @param additionalScore An additional base score to include in the calculation (e.g., bonus points).
+     */
     private void scoreWord(List<Tile> word, int multiplier, int additionalScore) {
         int score = additionalScore;
         for (Tile c : word) {
@@ -265,6 +279,11 @@ public class ScrabbleModel {
         getCurrentPlayer().updateScore(score*multiplier);}
     }
 
+    /**
+     * Updates the current player's score by adding a specified value.
+     *
+     * @param score The value to add to the current player's total score.
+     */
     private void updatePlayerScore(int score){
         getCurrentPlayer().updateScore(score);
     }
@@ -282,6 +301,7 @@ public class ScrabbleModel {
         int xIndex;
         int yIndex;
 
+        // Determine the opposite direction for scoring perpendicular words
         char oppositeDirection = direction == 'D' ? 'R': 'D';
 
         int multiplier = 1;
@@ -294,21 +314,25 @@ public class ScrabbleModel {
 
         // Place the word on the board and update the player's hand
         for (int i = 0; i < word.size(); i++) {
-            Tile c = word.get(i);
+            Tile c = word.get(i); // Current tile to place
             if (direction == 'D') {
-                yIndex = y + i;
+                yIndex = y + i; // Move down for vertical placement
                 xIndex = x;
             } else {
                 yIndex = y;
-                xIndex = x + i;
+                xIndex = x + i; // Move right for horizontal placement
             }
             if (board.isEmpty(xIndex, yIndex)) {
+                // if empty, place the tile
                 Tile tile = getCurrentPlayer().popTile(c);
                 board.addLetter(xIndex, yIndex, tile);
                 getCurrentPlayer().refillHand();
+
+                // Check for special score multipliers at the location
                 String m = board.getMultiplier(xIndex, yIndex);
                 if (!m.equals("normal")){
                     switch (m){
+                        // Apply scoring rules based on multiplier type
                         case "DL" -> {
                             wordScore += 2 * Tile.getTileScore(tile);
                             scoreWord(getWord(xIndex, yIndex, oppositeDirection, tile), 1, Tile.getTileScore(tile));
@@ -329,10 +353,12 @@ public class ScrabbleModel {
                         }
                     }
                 } else {
+                    // No special multiplier; add the tile's base score
                     wordScore += Tile.getTileScore(tile);
                     scoreWord(getWord(xIndex, yIndex, oppositeDirection, tile), 1, 0);
                 }
             } else {
+                // The board cell is already occupied; add the score of the existing tile
                 wordScore += Tile.getTileScore(board.getTile(xIndex, yIndex));
             }
         }

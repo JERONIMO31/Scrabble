@@ -76,7 +76,7 @@ public class Board {
      * Sets up the multipliers for the Scrabble board, initializing positions for Double Letter (DL),
      * Triple Letter (TL), Double Word (DW), and Triple Word (TW) tiles.
      */
-    private void setMultiplier(String fileName){
+    public void setMultiplier(String fileName){
         try {
             File file = new File("src/boardLayouts/" + fileName);
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();

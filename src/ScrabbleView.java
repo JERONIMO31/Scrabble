@@ -125,7 +125,7 @@ public class ScrabbleView extends JFrame {
         for (String name : layoutNames) {
             JMenuItem layoutItem = new JMenuItem(name);
             mouseListener(null, null, layoutItem, 2);
-            layoutItem.setActionCommand(name);
+            layoutItem.setActionCommand("XML " + name);
             layoutItem.addActionListener(sc);
             boardMenu.add(layoutItem);
         }

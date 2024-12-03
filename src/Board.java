@@ -15,7 +15,7 @@ public class Board {
     public Board() {
         multipliers = new String[15][15]; 
         board = new Tile[15][15];  // Initialize an empty 15x15 board
-        setMultiplier("defaultLayout.txt");
+        setMultiplier("defaultLayout.xml");
     }
     public Tile[][] getBoard(){return board;}
     /**

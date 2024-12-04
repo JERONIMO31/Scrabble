@@ -81,6 +81,8 @@ public class ScrabbleView extends JFrame {
         controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.Y_AXIS));
         JButton playWordButton = new JButton("Play Word");
         JButton skipButton = new JButton("Skip Turn");
+        JButton undoButton = new JButton("Undo");
+        JButton redoButton = new JButton("Redo");
 
         playWordButton.setActionCommand("P");
         playWordButton.addActionListener(sc); // Play word actionListener
@@ -90,8 +92,16 @@ public class ScrabbleView extends JFrame {
         skipButton.addActionListener(sc); // Skip turn actionListener
         skipButton.setBackground(Color.green);
 
+        undoButton.setActionCommand("UNDO");
+        redoButton.setActionCommand("REDO");
+
+        undoButton.addActionListener(sc); // Undo actionListener
+        redoButton.addActionListener(sc); // Redo actionListener
+
         controlPanel.add(playWordButton);
         controlPanel.add(skipButton);
+        controlPanel.add(undoButton);
+        controlPanel.add(redoButton);
 
         controlPanel.setSize(60, 50);
         playerHandPanel.add(controlPanel); // Add to playerHandPanel

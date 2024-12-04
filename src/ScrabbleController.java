@@ -60,6 +60,7 @@ public class ScrabbleController implements ActionListener {
             case "P" -> handlePlayButton();
             case "HELP" -> view.showHelp();
             case "RGSP" -> {
+                model.saveState(); //save state
                 System.out.println("reset");
                 this.playedTiles = new ArrayList<>();
                 this.selectedTile = null;
@@ -88,6 +89,18 @@ public class ScrabbleController implements ActionListener {
             case "XML" -> {
                 model.getBoard().setMultiplier(position[1]);
                 view.updateView();
+            }
+            case "UNDO" -> {
+                if (!model.undo()) {
+                    JOptionPane.showMessageDialog(view.getFrame(), "No moves to undo!");
+                }
+                view.updateView(); // Refresh view after undo
+            }
+            case "REDO" -> {
+                if (!model.redo()) {
+                    JOptionPane.showMessageDialog(view.getFrame(), "No moves to redo!");
+                }
+                view.updateView(); // Refresh view after redo
             }
         }
     }
@@ -210,6 +223,9 @@ public class ScrabbleController implements ActionListener {
         // Make the move on the model, handle illegal move if unsuccessful
         if (!model.makeMove(xStartIndex, yStartIndex, direction, word)) {
             handleIllegalMove();
+        }
+        else{
+            model.saveState();
         }
         this.playedTiles = new ArrayList<>();
         this.selectedTile = null;

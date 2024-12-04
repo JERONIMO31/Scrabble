@@ -11,6 +11,10 @@ public class ScrabbleModel implements Serializable {
     private HashSet<String> wordSet;
     private Boolean firstMove;
 
+    // Undo and Redo stacks
+    private transient Stack<ScrabbleModel> undoStack = new Stack<>();
+    private transient Stack<ScrabbleModel> redoStack = new Stack<>();
+
     /**
      * Constructor for ScrabbleModel.
      * Initializes the board, bag, players list, and loads valid words from a file.
@@ -39,6 +43,100 @@ public class ScrabbleModel implements Serializable {
         this.loadWordsFromFile();
         firstMove = true;
         currentPlayerIndex = 0;
+    }
+
+    /**
+     * Saves the current state for undo functionality.
+     */
+    public void saveState() {
+        try {
+            ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+            ObjectOutputStream out = new ObjectOutputStream(byteOut);
+            out.writeObject(this);
+            out.close();
+            undoStack.push((ScrabbleModel) deserialize(byteOut.toByteArray()));
+            redoStack.clear(); // Clear redo stack after a new move
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Undo the last move.
+     * @return True if undo was successful, false otherwise.
+     */
+    public boolean undo() {
+        if (!undoStack.isEmpty()) {
+            try {
+                redoStack.push(cloneState());
+                ScrabbleModel previousState = undoStack.pop();
+                restoreState(previousState);
+                return true;
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Redo the last undone move.
+     * @return True if redo was successful, false otherwise.
+     */
+    public boolean redo() {
+        if (!redoStack.isEmpty()) {
+            try {
+                undoStack.push(cloneState());
+                ScrabbleModel nextState = redoStack.pop();
+                restoreState(nextState);
+                return true;
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Clones the current state.
+     * @return A deep copy of the current ScrabbleModel state.
+     */
+    private ScrabbleModel cloneState() throws IOException, ClassNotFoundException {
+        ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+        ObjectOutputStream out = new ObjectOutputStream(byteOut);
+        out.writeObject(this);
+        out.close();
+
+        return (ScrabbleModel) deserialize(byteOut.toByteArray());
+    }
+
+    /**
+     * Restores the state from a given ScrabbleModel.
+     * @param state The state to restore.
+     */
+    private void restoreState(ScrabbleModel state) {
+        this.players = state.players;
+        this.board = state.board;
+        this.bag = state.bag;
+        this.view = state.view;
+        this.currentPlayerIndex = state.currentPlayerIndex;
+        this.wordSet = state.wordSet;
+        this.firstMove = state.firstMove;
+    }
+
+    /**
+     * Deserialize a ScrabbleModel from a byte array.
+     * @param data The serialized state as a byte array.
+     * @return The deserialized ScrabbleModel.
+     * @throws IOException If deserialization fails.
+     * @throws ClassNotFoundException If the class cannot be found.
+     */
+    private Object deserialize(byte[] data) throws IOException, ClassNotFoundException {
+        ByteArrayInputStream byteIn = new ByteArrayInputStream(data);
+        ObjectInputStream in = new ObjectInputStream(byteIn);
+        Object obj = in.readObject();
+        in.close();
+        return obj;
     }
 
     public void setView(ScrabbleView view){

@@ -419,6 +419,7 @@ public class ScrabbleModel implements Serializable {
             return false;
         }
 
+        saveState();
         // Place the word on the board and update the player's hand
         for (int i = 0; i < word.size(); i++) {
             Tile c = word.get(i); // Current tile to place

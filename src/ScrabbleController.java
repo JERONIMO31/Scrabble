@@ -224,9 +224,6 @@ public class ScrabbleController implements ActionListener {
         if (!model.makeMove(xStartIndex, yStartIndex, direction, word)) {
             handleIllegalMove();
         }
-        else{
-            model.saveState();
-        }
         this.playedTiles = new ArrayList<>();
         this.selectedTile = null;
     }

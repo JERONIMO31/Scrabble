@@ -9,7 +9,7 @@ public class ScrabbleModel implements Serializable {
     private transient ScrabbleView view;
     private int currentPlayerIndex;
     private HashSet<String> wordSet;
-    private Boolean firstMove;
+    private Boolean firstMove, firstSave;;
 
     // Undo and Redo stacks
     private transient Stack<ScrabbleModel> undoStack = new Stack<>();
@@ -27,6 +27,7 @@ public class ScrabbleModel implements Serializable {
         wordSet = new HashSet<>();
         this.loadWordsFromFile();
         firstMove = true;
+        firstSave = true;
         currentPlayerIndex = 0;
     }
 
@@ -42,6 +43,7 @@ public class ScrabbleModel implements Serializable {
         wordSet = new HashSet<>();
         this.loadWordsFromFile();
         firstMove = true;
+        firstSave = true;
         currentPlayerIndex = 0;
     }
 
@@ -118,10 +120,15 @@ public class ScrabbleModel implements Serializable {
         this.players = state.players;
         this.board = state.board;
         this.bag = state.bag;
-        this.view = state.view;
+        if (this.view != null) {
+            this.view = this.view; // Keep existing view
+        } else {
+            this.view = state.view;
+        }
         this.currentPlayerIndex = state.currentPlayerIndex;
         this.wordSet = state.wordSet;
         this.firstMove = state.firstMove;
+        this.firstSave = state.firstSave;
     }
 
     /**
@@ -250,6 +257,7 @@ public class ScrabbleModel implements Serializable {
                     xIndex = x + i;
                 }
                 if (xIndex == 7 && yIndex == 7) {
+                    saveState();
                     firstMove = false;
                     return true;
                 }
@@ -414,8 +422,13 @@ public class ScrabbleModel implements Serializable {
         if (!isValid(x, y, direction, word)) {
             return false;
         }
+        if(!firstSave){
+            saveState();
+        }
+        else{
+            firstSave = false;
+        }
 
-        saveState();
         // Place the word on the board and update the player's hand
         for (int i = 0; i < word.size(); i++) {
             Tile c = word.get(i); // Current tile to place

@@ -184,11 +184,7 @@ public class ScrabbleModel implements Serializable {
         players.add(new Player(name, bag));
     }
 
-    /**
-     * Adds a bot player to the game with the specified name.
-     * @param name The name of the bot to be added.
-     */
-    public void addBot(String name) {players.add(new Bot(name, bag));}
+
 
     /**
      * Checks if a word can be placed on the board at the specified coordinates

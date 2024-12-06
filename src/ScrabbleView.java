@@ -177,19 +177,13 @@ public class ScrabbleView extends JFrame {
      * Prompts the user for the number of players, AI players, and their names, adding them to the model.
      */
     public void setPlayers() {
-        int playerNum = Integer.parseInt(JOptionPane.showInputDialog(this, "Enter number of players (max 4 players including AIplayer): "));
-        int aiNum =  Integer.parseInt(JOptionPane.showInputDialog(this, "Enter number of AIplayers (max 4 players including AIplayers): "));
-        while (playerNum+aiNum > 4 || playerNum+aiNum < 1) {
+        int playerNum = Integer.parseInt(JOptionPane.showInputDialog(this, "Enter number of players (max 4 players ): "));
+        while (playerNum > 4 || playerNum < 1) {
             playerNum = Integer.parseInt(JOptionPane.showInputDialog(this, "Invalid number of players. Please state 1, 2, 3, or 4: "));
-            aiNum =  Integer.parseInt(JOptionPane.showInputDialog(this, "Enter number of AIplayers (max 4 players including AIplayers): "));
         }
         for (int i = 0; i < playerNum; i++) {
             String name = JOptionPane.showInputDialog(this, "Enter player " + (i + 1) + "'s name: ");
             model.addPlayer(name);
-        }
-        for (int i = 1; i <= aiNum; i++) {
-            String name = "Ai#"+String.valueOf(i);
-            model.addBot(name);
         }
     }
 
@@ -215,10 +209,6 @@ public class ScrabbleView extends JFrame {
             boardMenu.setEnabled(false);
         }
 
-        // If the current player is a bot, let it play its turn
-        if(model.getCurrentPlayer() instanceof Bot){
-            ((Bot) model.getCurrentPlayer()).playBot(model);
-        }
 
         // Restore the board
         for (int i = 0; i < 15; i++) {
@@ -239,8 +229,6 @@ public class ScrabbleView extends JFrame {
                 }
             }
         }
-        // If the current player is not a bot, update their hand and score
-        if(!(model.getCurrentPlayer() instanceof Bot)) {
 
             // Restore the current players hand
             for (int i = 0; i < model.getCurrentPlayer().getHand().size(); i++) {
@@ -255,7 +243,6 @@ public class ScrabbleView extends JFrame {
 
             // Update the current player
             playerName.setText(model.getCurrentPlayer().getName() + "'s hand:");
-        }
     }
 
     /**
